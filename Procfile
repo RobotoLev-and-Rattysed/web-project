@@ -1,2 +1,2 @@
-release: python vk.py
-web: python main.py $PORT
+web: python main.py
+worker: python discord.py
