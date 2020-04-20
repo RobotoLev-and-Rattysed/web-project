@@ -1,2 +1,2 @@
-web: python main.py
-web: python vk.py
+release: python vk.py
+web: python main.py $PORT
