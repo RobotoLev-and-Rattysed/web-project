@@ -21,6 +21,6 @@ class YLBotClient(discord.Client):
             await message.channel.send(url)
 
 
-TOKEN = "NjkzMTEwODgyNzYyMjI3NzU0.Xn4UNQ.jm2fqMpAa2XeGC34oSgLMlqEWUs"
+TOKEN = "NzAxODc5ODU0NTIxNjQ3MTI0.Xp362w.ZUBqA0iw3GKsLSnKRe6KbdX_A_U"
 client = YLBotClient()
 client.run(TOKEN)

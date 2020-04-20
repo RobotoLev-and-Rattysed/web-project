@@ -4,7 +4,7 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 
 
-api_token = 'bc1e91d1bdb31d5347620628e04b7cfecf4107c57b1ffd1e2133d8e8a44872db16cbfa953ba2d63ef89e8'
+api_token = '7826c95a31893273c01d1f66427239c828fd6099c5717149a38e063127e55f4d6205db40fd048b63ef42d'
 
 
 vk_session = vk_api.VkApi(token=api_token)
