@@ -1,10 +1,7 @@
-import flask
 from flask import Flask
 
 import os
 
-
-print('hi!')
 
 app = Flask(__name__)
 

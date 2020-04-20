@@ -1,2 +1,2 @@
 web: python main.py
-worker: python discord.py
+worker: python discord_handler.py
