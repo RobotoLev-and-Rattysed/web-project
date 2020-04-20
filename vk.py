@@ -18,5 +18,5 @@ for event in longpoll.listen():
         from_id = message['from_id']
         text = message['text']
 
-        vk.messages.send(user_id=from_id, message='Сообщение обработано',
+        vk.messages.send(user_id=from_id, message='Сообщение принято и обработано',
                          random_id=random.randint(0, 2 ** 64))
