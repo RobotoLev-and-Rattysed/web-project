@@ -5,6 +5,7 @@ import json
 import random
 
 from settings import group_key, confirmation_key, secret_key
+from bot_engine import get_answer
 
 
 blueprint = Blueprint(__name__, 'vk_handler')
@@ -24,7 +25,11 @@ def processing():
         return confirmation_key
     elif data['type'] == 'message_new':
         message = data['object']['message']
-        api.messages.send(access_token=group_key, user_id=message['from_id'],
-                          message=f'Я получил сообщение \"{message["text"]}\"',
-                          random_id=random.randint(0, 2 ** 64))
+
+        answer_text, answer_attachment = get_answer(message['text'], platform='vk')
+
+        if answer_text or answer_attachment:
+            api.messages.send(access_token=group_key, peer_id=message['peer_id'],
+                              message=answer_text, attachment=answer_attachment,
+                              random_id=random.randint(0, 2 ** 64))
         return 'ok'
