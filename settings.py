@@ -1,0 +1,3 @@
+group_key = '7826c95a31893273c01d1f66427239c828fd6099c5717149a38e063127e55f4d6205db40fd048b63ef42d'
+confirmation_key = '6e666245'
+secret_key = 'Vt248qN29CeIsIs4'
