@@ -2,6 +2,7 @@ from flask import Flask
 # from flask_ngrok import run_with_ngrok
 
 import vk_handler
+from data import db_session
 
 import os
 
