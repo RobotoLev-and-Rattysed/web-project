@@ -2,9 +2,12 @@ from flask import Flask
 # from flask_ngrok import run_with_ngrok
 
 import vk_handler
+from data import db_session
 
 import os
 
+
+db_session.global_init()
 
 app = Flask(__name__)
 app.register_blueprint(vk_handler.blueprint)
