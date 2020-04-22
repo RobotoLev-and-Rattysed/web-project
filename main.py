@@ -7,6 +7,8 @@ from data import db_session
 import os
 
 
+db_session.global_init()
+
 app = Flask(__name__)
 app.register_blueprint(vk_handler.blueprint)
 # run_with_ngrok(app)
