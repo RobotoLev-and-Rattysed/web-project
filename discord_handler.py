@@ -5,6 +5,7 @@ import random
 
 class YLBotClient(discord.Client):
     prefix = ''
+
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
@@ -13,8 +14,8 @@ class YLBotClient(discord.Client):
     #         return
     #     await message.channel.send(f'Я получил сообщение {message.content}')
 
-class RandomThings(commands.Cog):
 
+class RandomThings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -41,6 +42,7 @@ class RandomThings(commands.Cog):
             await channel.set_permissions(ctx.guild.get_role(self.mute_role_id), send_messages=False)
         # print(type(ctx.guild.text_channels[0]))
         # print(dir(discord.guild.Guild))
+
 
 TOKEN = "NzAxODc5ODU0NTIxNjQ3MTI0.Xp362w.ZUBqA0iw3GKsLSnKRe6KbdX_A_U"
 bot = commands.Bot(command_prefix='-')
