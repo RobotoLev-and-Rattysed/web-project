@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import random
+from settings import discord_key
 
 
 class YLBotClient(discord.Client):
@@ -47,18 +48,19 @@ class MainCommands(commands.Cog):
         self.mute_role_id = int(role[3:-1])
         server = ctx.guild.id
         for channel in ctx.guild.text_channels:
-            await channel.set_permissions(ctx.guild.get_role(self.mute_role_id), send_messages=False)
+            await channel.set_permissions(ctx.guild.get_role(self.mute_role_id),
+                                          send_messages=False)
         await ctx.message.channel.send('Mute Role has been updated succesfuly!')
         # print(type(ctx.guild.text_channels[0]))
         # print(dir(discord.guild.Guild))
 
     async def perms_error(self, ctx):
-        await ctx.message.channel.send(f"{ctx.author.mention}, you don't have enought permissions to do that.")
+        await ctx.message.channel.send(
+            f"{ctx.author.mention}, you don't have enought permissions to do that.")
 
 
-TOKEN = "NzAxODc5ODU0NTIxNjQ3MTI0.Xp362w.ZUBqA0iw3GKsLSnKRe6KbdX_A_U"
 bot = commands.Bot(command_prefix='-')
 bot.add_cog(MainCommands(bot))
-bot.run(TOKEN)
+bot.run(discord_key)
 # client = YLBotClient()
 # client.run(TOKEN)
