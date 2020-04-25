@@ -2,9 +2,13 @@
 csrf_key = 'b0ecS4g2Kh0Wt4C2'
 
 # Настройки API ВКонтакте
-group_key = '7826c95a31893273c01d1f66427239c828fd6099c5717149a38e063127e55f4d6205db40fd048b63ef42d'
-confirmation_key = '6e666245'
-secret_key = 'Vt248qN29CeIsIs4'
+vk_group_key =\
+    '7826c95a31893273c01d1f66427239c828fd6099c5717149a38e063127e55f4d6205db40fd048b63ef42d'
+vk_confirmation_key = '6e666245'
+vk_secret_key = 'Vt248qN29CeIsIs4'
+
+# Настройки API Дискорда
+discord_key = 'NzAxODc5ODU0NTIxNjQ3MTI0.Xp362w.ZUBqA0iw3GKsLSnKRe6KbdX_A_U'
 
 # Настройки БД на Heroku
 # database_url - только для локального тестирования (осторожно: может устареть)
