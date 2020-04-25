@@ -16,6 +16,8 @@ class User(SqlAlchemyBase, UserMixin):
     vk_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
     discord_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
 
+    conversations = orm.relation("Conversation", back_populates='user_id')
+
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
     # jobs = orm.relation("Jobs", back_populates='team_leader_object')
@@ -36,9 +38,29 @@ class Conversation(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 
+    user_id = sqlalchemy.Column(sqlalchemy.Integer)
+    vk_conversation_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    discord_guild_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+
+
+class VkConversation(SqlAlchemyBase):
+    __tablename__ = 'vk_conversations'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+
     vk_chat = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
     vk_leader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     vk_moderators = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
+
+
+class DiscordGuild(SqlAlchemyBase):
+    __tablename__ = 'discord_guilds'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 
     discord_server = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
     discord_leader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
