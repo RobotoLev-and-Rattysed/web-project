@@ -7,7 +7,7 @@ def get_answer(message_text, platform):
         return None, None
 
     command = message_text[1:]
-    if command in bots_infrastructure:
+    if command in bot_commands:
         if platform in command.platforms:
             answer_text, answer_attachment = bot_commands[command].action()
         else:
