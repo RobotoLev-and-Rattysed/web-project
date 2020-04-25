@@ -9,7 +9,7 @@ from flask_login import UserMixin
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
-    user_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
@@ -34,7 +34,7 @@ class User(SqlAlchemyBase, UserMixin):
 class Conversation(SqlAlchemyBase):
     __tablename__ = 'conversations'
 
-    conversation_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 
     vk_chat = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
     vk_leader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
