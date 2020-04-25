@@ -16,7 +16,7 @@ class User(SqlAlchemyBase, UserMixin):
     vk_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
     discord_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
 
-    conversations = orm.relation("Conversation", back_populates='user_id')
+    conversations = orm.relation("Conversation", back_populates='user_id_object')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -39,6 +39,7 @@ class Conversation(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
 
     user_id = sqlalchemy.Column(sqlalchemy.Integer)
+    user_id_object = orm.relation('User')
     vk_conversation_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     discord_guild_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
