@@ -8,7 +8,7 @@ def get_answer(message_text, platform):
 
     command = message_text[1:]
     if command in bot_commands:
-        if platform in command.platforms:
+        if platform in bot_commands[command].platforms:
             answer_text, answer_attachment = bot_commands[command].action()
         else:
             answer_text, answer_attachment = "Команда недоступна на данной платформе", None
