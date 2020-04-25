@@ -35,8 +35,9 @@ def load_user(user_id):
 # При локальном тестировании надо закомментировать всю функцию
 @app.before_request
 def force_https():
-    if not request.is_secure:
-        return redirect(request.url.replace('http://', 'https://'), 301)
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
 
 if __name__ == "__main__":
