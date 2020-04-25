@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 from flask_login import LoginManager
 # from flask_ngrok import run_with_ngrok
 
@@ -29,6 +29,14 @@ login_manager.init_app(app)
 def load_user(user_id):
     session = db_session.create_session()
     return session.query(User).get(user_id)
+
+
+# Автоматический редирект с http:// на https://, если запрашиваемый адрес существует
+# При локальном тестировании надо закомментировать всю функцию
+@app.before_request
+def force_https():
+    if not request.is_secure:
+        return redirect(request.url.replace('http://', 'https://'), 301)
 
 
 if __name__ == "__main__":
