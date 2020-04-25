@@ -1,4 +1,4 @@
-import bots_infrastructure.all_commands
+import bots_infrastructure.__all_commands
 from bots_infrastructure.command_engine import bot_commands
 
 
