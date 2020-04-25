@@ -31,15 +31,6 @@ def load_user(user_id):
     return session.query(User).get(user_id)
 
 
-# Автоматический редирект с http:// на https://, если запрашиваемый адрес существует
-# При локальном тестировании надо закомментировать всю функцию
-@app.before_request
-def force_https():
-    if request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        return redirect(url, code=301)
-
-
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run('0.0.0.0', port=port)
