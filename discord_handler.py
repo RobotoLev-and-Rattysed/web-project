@@ -5,15 +5,14 @@ from settings import discord_key
 from bot_engine import is_command, get_answer
 
 
-class YLBotClient(discord.Client):
-
+class DSBotClient(discord.Client):
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')
 
     async def on_message(self, message):
         if message.author == self.user or not is_command(message.content):
             return
-        reply = get_answer(message.content, 'DS')
+        reply = get_answer(message.content, 'discord')
         await message.channel.send(f'Я получил сообщение {message.content}')
 
 
@@ -63,5 +62,6 @@ class YLBotClient(discord.Client):
 # bot = commands.Bot(command_prefix='-')
 # bot.add_cog(MainCommands(bot))
 # bot.run(discord_key)
-client = YLBotClient()
+
+client = DSBotClient()
 client.run(discord_key)
