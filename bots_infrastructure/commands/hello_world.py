@@ -2,7 +2,7 @@ from bots_infrastructure.command_engine import BotCommand, BotAnswer
 
 
 def action(params):
-    return BotAnswer('Hello World!', {'photo': ['static/img/mars.jpg']})
+    return BotAnswer('Hello World!', {'photo': ['static/img/hello_world.jpg']})
 
 
 command = BotCommand('hello_world', action)
