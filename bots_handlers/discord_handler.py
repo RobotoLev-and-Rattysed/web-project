@@ -1,8 +1,6 @@
 import discord
-from discord.ext import commands
-import random
 from settings import discord_key
-from bot_engine import is_command, get_answer
+from bots_infrastructure.bot_engine import is_command, get_answer
 
 
 class DSBotClient(discord.Client):

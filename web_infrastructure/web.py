@@ -1,11 +1,10 @@
-import flask
-from flask import Blueprint, request, render_template, redirect
+from flask import Blueprint, render_template, redirect
 from flask_login import login_user, logout_user, current_user, login_required
 
 
 from data import db_session
 from data.db_session import User
-from data.forms_models import RegisterForm, LoginForm
+from web_infrastructure.forms_models import RegisterForm, LoginForm
 
 
 blueprint = Blueprint(__name__, 'web', template_folder='templates')

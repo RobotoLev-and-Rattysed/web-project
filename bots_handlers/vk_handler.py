@@ -6,7 +6,7 @@ import json
 import random
 
 from settings import vk_group_key, vk_confirmation_key, vk_secret_key
-from bot_engine import get_answer
+from bots_infrastructure.bot_engine import get_answer
 
 blueprint = Blueprint(__name__, 'vk_handler')
 

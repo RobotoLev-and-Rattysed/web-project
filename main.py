@@ -2,8 +2,8 @@ from flask import Flask, request, redirect
 from flask_login import LoginManager
 # from flask_ngrok import run_with_ngrok
 
-import vk_handler
-import web
+from bots_handlers import vk_handler
+from web_infrastructure import web
 
 from data import db_session
 from data.db_session import User
