@@ -18,7 +18,10 @@ class DSBotClient(discord.Client):
             if not answer.attachments:
                 return
             for attachment in answer.attachments.values():
-                await message.channel.send('', file=discord.File('../' + attachment[0]))
+                try:
+                    await message.channel.send('', file=discord.File(attachment[0]))
+                except FileNotFoundError:
+                    await message.channel.send('', file=discord.File('../' + attachment[0]))
 
 
 client = DSBotClient()
