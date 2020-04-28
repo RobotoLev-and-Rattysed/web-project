@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 
 from data import db_session
-from data.db_session import User, Conversation
+from data.db_session import User
 from data.forms_models import RegisterForm, LoginForm
 
 
