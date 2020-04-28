@@ -10,14 +10,12 @@ class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    email = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=True)
-    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    email = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
-    vk_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
-    discord_user = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
+    books = orm.relation("Book", back_populates='user_object')
 
-    conversations = orm.relation("Conversation", back_populates='user_id_object')
-
+    hashed_password = sqlalchemy.Column(sqlalchemy.String)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
     # jobs = orm.relation("Jobs", back_populates='team_leader_object')
@@ -33,39 +31,38 @@ class User(SqlAlchemyBase, UserMixin):
         return check_password_hash(self.hashed_password, password)
 
 
-class Conversation(SqlAlchemyBase):
-    __tablename__ = 'conversations'
+class Book(SqlAlchemyBase):
+    __tablename__ = 'books'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
-    user_id_object = orm.relation('User')
-    vk_conversation_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    discord_guild_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'))
+    genre_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('genres.id'))
+
+    user_object = orm.relation('User')
+    author_object = orm.relation('Author')
+    genre_object = orm.relation('Genre')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
 
-class VkConversation(SqlAlchemyBase):
-    __tablename__ = 'vk_conversations'
+class Author(SqlAlchemyBase):
+    __tablename__ = 'authors'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.String, unique=True)
 
-    vk_chat = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
-    vk_leader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    vk_moderators = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    books = orm.relation('Book', back_populates='author_object')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
 
-class DiscordGuild(SqlAlchemyBase):
-    __tablename__ = 'discord_guilds'
+class Genre(SqlAlchemyBase):
+    __tablename__ = 'genres'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.Integer, unique=True)
 
-    discord_server = sqlalchemy.Column(sqlalchemy.Integer, unique=True, nullable=True)
-    discord_leader = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    discord_moderator_role = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    discord_mute_role = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    books = orm.relation('Book', back_populates='genre_object')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)

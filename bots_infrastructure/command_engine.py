@@ -12,3 +12,9 @@ class BotCommand:
 
     def action(self):
         pass
+
+
+class BotAnswer:
+    def __init__(self, text=None, attachments=None):
+        self.text = text
+        self.attachments = attachments
