@@ -13,7 +13,7 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, unique=True)
     is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
-    books = orm.relation("Book", back_populates='user_object')
+    books = orm.relationship("Book", back_populates='user')
 
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
@@ -22,7 +22,7 @@ class User(SqlAlchemyBase, UserMixin):
     # departments = orm.relation("Department", back_populates='chief_object')
 
     def __repr__(self):
-        return f'<User> {self.id} {self.login}'
+        return f'<User> {self.id} {self.email}'
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
@@ -40,10 +40,10 @@ class Book(SqlAlchemyBase):
     name = sqlalchemy.Column(sqlalchemy.String)
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'))
     genre_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('genres.id'))
-
-    user_object = orm.relation('User')
-    author_object = orm.relation('Author')
-    genre_object = orm.relation('Genre')
+    user = orm.relationship('User', back_populates='books')
+    author = orm.relationship('Author', back_populates='books')
+    genre = orm.relationship('Genre', back_populates='books')
+    status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -54,7 +54,7 @@ class Author(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
 
-    books = orm.relation('Book', back_populates='author_object')
+    books = orm.relation('Book', back_populates='author')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -65,6 +65,6 @@ class Genre(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
 
-    books = orm.relation('Book', back_populates='genre_object')
+    books = orm.relation('Book', back_populates='genre')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)

@@ -18,8 +18,10 @@ session.add(moderator)
 session.add(Author(name='Тестовый автор'))
 session.add(Genre(name='Тестовый жанр'))
 session.add(Book(user_id=1,
-                 name='Тестовая книга',
+                 name='Тестовая книга 1',
                  author_id=1,
                  genre_id=1))
 
 session.commit()
+
+print('База успешно обновлена')
