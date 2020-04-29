@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align="center">
+    <br />
+    <h2>{{ title }}</h2>
+    <br />
+</div>
+{% if books %}
+    <div class="table table table-borderless" align="center">
+        <table>
+            <tr class="table-active">
+                <th>ID</th>
+                <th>Название книги</th>
+                <th>Автор книги</th>
+                <th>Жанр книги</th>
+                <th>Добавил</th>
+                <th>Статус книги</th>
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.author.name }}</td>
+                    <td>{{ book.genre.name }}</td>
+                    <td>{{ book.user.nickname }}</td>
+                    <td>{{ book.status }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+<h4 align="center">Тут пока пусто :(</h4>
+{% endif %}
+{% endblock %}

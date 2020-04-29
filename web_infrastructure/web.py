@@ -13,8 +13,16 @@ blueprint = Blueprint(__name__, 'web', template_folder='templates')
 @blueprint.route('/')
 def main():
     if current_user.is_authenticated:
-        return render_template('my_books.html', title='Мои книги', books=current_user.books)
+        session = db_session.create_session()
+        books = session.query(Book).filter(Book.id <= 10)
+        return render_template('books.html', title='Популярные книги', books=books)
     return render_template('greeting.html', title='Электронная библиотека')
+
+
+@login_required
+@blueprint.route('/my')
+def my_books():
+    return render_template('books.html', title='Мои книги', books=current_user.books)
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -32,8 +40,12 @@ def register():
         if session.query(User).filter(User.email == form.email.data).first():
             return render_template('register.html', form=form, title="Регистрация",
                                    message="Пользователь с таким e-mail уже существует")
+        if session.query(User).filter(User.nickname == form.nickname.data).first():
+            return render_template('register.html', form=form, title="Регистрация",
+                                   message="Пользователь с таким ником уже существует")
 
-        user = User(email=form.email.data)
+        user = User(email=form.email.data,
+                    nickname=form.nickname.data)
         user.set_password(form.password.data)
         session.add(user)
         session.commit()

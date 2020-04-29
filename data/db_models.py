@@ -11,6 +11,7 @@ class User(SqlAlchemyBase, UserMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    nickname = sqlalchemy.Column(sqlalchemy.String, unique=True)
     is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     books = orm.relationship("Book", back_populates='user')
