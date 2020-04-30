@@ -7,7 +7,7 @@
     <br />
 </div>
 {% if books %}
-    <div class="table table table-borderless" align="center">
+    <div class="table table-borderless" align="center">
         <table>
             <tr class="table-active">
                 <th>ID</th>
@@ -16,7 +16,6 @@
                 <th>Жанр</th>
                 <th>Добавил</th>
                 <th>Статус</th>
-                <th>Изображение</th>
             </tr>
             {% for book in books %}
                 <tr>
@@ -26,10 +25,6 @@
                     <td>{{ book.genre.name }}</td>
                     <td>{{ book.user.nickname }}</td>
                     <td>{{ book.status }}</td>
-                    {% if book.image %}
-                        <td><img src="{{ book.image }}" alt="изображение не загрузилось :("
-                                 width="150" class="rounded"/></td>
-                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

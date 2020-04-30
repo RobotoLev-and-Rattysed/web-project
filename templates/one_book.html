@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align="center">
+    <br />
+    <h2>{{ title }}</h2>
+    <br />
+</div>
+{% if book %}
+    <!--<div class="table table-borderless" align="center">-->
+        <!--<table>-->
+            <!--<tr class="table-active">-->
+                <!--<th>ID</th>-->
+                <!--<th>Название</th>-->
+                <!--<th>Автор</th>-->
+                <!--<th>Жанр</th>-->
+                <!--<th>Добавил</th>-->
+                <!--<th>Статус</th>-->
+                <!--<th>Изображение</th>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>{{ book.id }}</td>-->
+                <!--<td>{{ book.name }}</td>-->
+                <!--<td>{{ book.author.name }}</td>-->
+                <!--<td>{{ book.genre.name }}</td>-->
+                <!--<td>{{ book.user.nickname }}</td>-->
+                <!--<td>{{ book.status }}</td>-->
+                <!--{% if book.image %}-->
+                    <!--<td><img src="{{ book.image }}" alt="изображение не загрузилось :("-->
+                             <!--width="150" class="rounded"/></td>-->
+                <!--{% endif %}-->
+            <!--</tr>-->
+        <!--</table>-->
+    <!--</div>-->
+    <div class="media">
+        <img src="{{ image_url }}" alt="Изображение не загрузилось" width="150" class="mr-3">
+        <div class="media-body">
+            <h5 class="mt-0">{{ book.name }} ({{ book.author.name }}, {{ book.genre.name }})</h5>
+            {{ book.description }}
+        </div>
+    </div>
+{% else %}
+<h4 align="center">Запрашиваемая книга не найдена :(</h4>
+{% endif %}
+{% endblock %}

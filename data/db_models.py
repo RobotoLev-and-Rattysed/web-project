@@ -14,7 +14,7 @@ class User(SqlAlchemyBase, UserMixin):
     nickname = sqlalchemy.Column(sqlalchemy.String, unique=True)
     is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
-    books = orm.relationship("Book", back_populates='user')
+    books = orm.relationship("Book", back_populates='user', lazy='subquery')
 
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
@@ -41,12 +41,12 @@ class Book(SqlAlchemyBase):
     name = sqlalchemy.Column(sqlalchemy.String)
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('authors.id'))
     genre_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('genres.id'))
-    user = orm.relationship('User', back_populates='books')
-    author = orm.relationship('Author', back_populates='books')
-    genre = orm.relationship('Genre', back_populates='books')
+    user = orm.relationship('User', back_populates='books', lazy='subquery')
+    author = orm.relationship('Author', back_populates='books', lazy='subquery')
+    genre = orm.relationship('Genre', back_populates='books', lazy='subquery')
 
     description = sqlalchemy.Column(sqlalchemy.String, default='Нет описания :(')
-    image = sqlalchemy.Column(sqlalchemy.String, default='static/img/books/no_image.jpg')
+    image = sqlalchemy.Column(sqlalchemy.Binary, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
@@ -58,7 +58,7 @@ class Author(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
 
-    books = orm.relation('Book', back_populates='author')
+    books = orm.relation('Book', back_populates='author', lazy='subquery')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
@@ -69,6 +69,6 @@ class Genre(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
 
-    books = orm.relation('Book', back_populates='genre')
+    books = orm.relation('Book', back_populates='genre', lazy='subquery')
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)

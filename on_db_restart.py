@@ -38,7 +38,8 @@ for i in range(1, 7):
         book.status = 1
 
     if i == 1:
-        book.image = 'static/img/books/test.jpg'
+        with open('static/img/books/test.jpg', 'rb') as f:
+            book.image = f.read()
 
     session.add(book)
 
