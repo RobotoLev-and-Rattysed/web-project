@@ -21,6 +21,10 @@ def get_answer(message_text, platform) -> BotAnswer:
             answer = BotAnswer("Команда недоступна на данной платформе")
     else:
         answer = BotAnswer("Такая команда мне не известна")
+    if platform == 'discord':
+        strings = answer.text.split('\n')
+        strings[0] = '> ```' + strings[0] + '```'
+        answer.text = '\n'.join(strings)
 
     return answer
     # if platform == 'vk':

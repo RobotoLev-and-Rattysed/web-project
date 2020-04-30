@@ -2,7 +2,9 @@ import discord
 import os
 from settings import discord_key
 from bots_infrastructure.bot_engine import is_command, get_answer
+from data import db_session
 
+db_session.global_init()
 
 class DSBotClient(discord.Client):
     async def on_ready(self):
