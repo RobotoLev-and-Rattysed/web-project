@@ -44,6 +44,9 @@ class Book(SqlAlchemyBase):
     user = orm.relationship('User', back_populates='books')
     author = orm.relationship('Author', back_populates='books')
     genre = orm.relationship('Genre', back_populates='books')
+
+    description = sqlalchemy.Column(sqlalchemy.String, default='Нет описания :(')
+    image = sqlalchemy.Column(sqlalchemy.String, default='static/img/books/no_image.jpg')
     status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)

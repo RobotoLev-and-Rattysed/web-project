@@ -11,11 +11,12 @@
         <table>
             <tr class="table-active">
                 <th>ID</th>
-                <th>Название книги</th>
-                <th>Автор книги</th>
-                <th>Жанр книги</th>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Жанр</th>
                 <th>Добавил</th>
-                <th>Статус книги</th>
+                <th>Статус</th>
+                <th>Изображение</th>
             </tr>
             {% for book in books %}
                 <tr>
@@ -25,6 +26,10 @@
                     <td>{{ book.genre.name }}</td>
                     <td>{{ book.user.nickname }}</td>
                     <td>{{ book.status }}</td>
+                    {% if book.image %}
+                        <td><img src="{{ book.image }}" alt="изображение не загрузилось :("
+                                 width="150" class="rounded"/></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

@@ -23,13 +23,22 @@ session.add(test)
 session.add(Author(name='Тестовый автор'))
 session.add(Genre(name='Тестовый жанр'))
 
-for i in range(1, 11):
+for i in range(1, 7):
     book = Book(user_id=1,
                 name=f'Тестовая книга {i}',
                 author_id=1,
                 genre_id=1)
+
     if i % 2 == 0:
         book.user_id = 2
+
+    if i % 3 == 1:
+        book.status = -1
+    elif i % 3 == 0:
+        book.status = 1
+
+    if i == 1:
+        book.image = 'static/img/books/test.jpg'
 
     session.add(book)
 
