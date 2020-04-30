@@ -9,8 +9,3 @@ def search(name='', author='', genre=''):
                                                                Genre.name.like('%' + genre + '%'),
                                                                Book.status == 1)
     return books
-    # for book in books:
-    #     print(book.name)
-    #     print(book.author.name)
-    #     print(book.id)
-    #     print()
