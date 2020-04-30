@@ -3,9 +3,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from data import db_session
 from data.db_session import User, Book, Author, Genre
-from web_infrastructure.forms_models import RegisterForm, LoginForm, AddBookForm
+from data.db_functions import get_photo_by_book
 
-import os.path as path
+from web_infrastructure.forms_models import RegisterForm, LoginForm, AddBookForm
 
 
 blueprint = Blueprint(__name__, 'web', template_folder='templates')
@@ -25,11 +25,7 @@ def one_book(book_id):
     }
 
     book = session.query(Book).get(book_id)
-    image_url = '/static/img/books/no_image.jpg'
-    if book and book.image:
-        image_url = '/static/img/books/temp.jpg'
-        with open(path.abspath(path.join(__file__, '../..' + image_url)), 'wb') as f:
-            f.write(book.image)
+    image_url = get_photo_by_book(book)
     return render_template(**template_params, book=book, image_url=image_url)
     # return 'Ы!'
 
