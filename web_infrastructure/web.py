@@ -98,7 +98,8 @@ def new_book():
 
         if filename:
             local_filename = generate_random_filename(extension='.jpg')
-            form.image.data.save(os.path.join(__file__, f'../../static/img/books/{local_filename}'))
+            form.image.data.save(os.path.abspath(
+                os.path.join(__file__, f'../../static/img/books/{local_filename}')))
             set_image_by_book(book, local_filename)
 
         session.add(book)
