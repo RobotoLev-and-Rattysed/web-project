@@ -3,12 +3,17 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from data import db_session
 from data.db_session import User, Book, Author, Genre
-from data.db_functions import get_photo_by_book
+from data.db_functions import generate_random_filename, get_image_by_book, set_image_by_book
 
-from web_infrastructure.forms_models import RegisterForm, LoginForm, AddBookForm
+from web_infrastructure.forms_models import RegisterForm, LoginForm, NewBookForm
+
+import os.path
 
 
 blueprint = Blueprint(__name__, 'web', template_folder='templates')
+
+
+# <---Главная страница--->
 
 
 @blueprint.route('/')
@@ -16,18 +21,7 @@ def main():
     return render_template('greeting.html', title='Электронная библиотека')
 
 
-@blueprint.route('/book/<int:book_id>')
-def one_book(book_id):
-    session = db_session.create_session()
-    template_params = {
-        'template_name_or_list': 'one_book.html',
-        'title': f'Книга id{book_id}'
-    }
-
-    book = session.query(Book).get(book_id)
-    image_url = get_photo_by_book(book)
-    return render_template(**template_params, book=book, image_url=image_url)
-    # return 'Ы!'
+# <---Все о книгах--->
 
 
 @blueprint.route('/books')
@@ -44,11 +38,23 @@ def my_books():
     return render_template('my_books.html', title='Мои книги', books=current_user.books)
 
 
+@blueprint.route('/book/<int:book_id>')
+def one_book(book_id):
+    session = db_session.create_session()
+    template_params = {
+        'template_name_or_list': 'one_book.html',
+        'title': f'Книга id{book_id}'
+    }
+
+    book = session.query(Book).get(book_id)
+    image_url = get_image_by_book(book)
+    return render_template(**template_params, book=book, image_url=image_url)
+
+
 @blueprint.route('/new_book', methods=['GET', 'POST'])
 @login_required
-def add_book():
-    session = db_session.create_session()
-    form = AddBookForm()
+def new_book():
+    form = NewBookForm()
 
     template_params = {
         'template_name_or_list': 'new_book.html',
@@ -65,13 +71,37 @@ def add_book():
             return render_template(**template_params,
                                    message="Такого жанра нет в базе")
 
-        session.add(Book(
+        # print(form.image.data.filename)
+        #
+        #
+        # Кусок рабочего кода из другого проекта -
+        # просто пример для написания аналогичного здесь
+        #
+        # file = form.photo.data
+        # filename = secure_filename(file.filename)
+        # if filename.split('.')[-1] in {'png', 'jpg', 'jpeg', 'gif'}:
+        #     file.save(app.config['UPLOAD_FOLDER'] + filename)
+        #     return redirect('/gallery')
+
+        book = Book(
             user_id=current_user.id,
             name=form.name.data,
             author_id=form.author.data,
             genre_id=form.genre.data,
             description=form.description.data
-        ))
+        )
+
+        filename = form.image.data.filename
+        if filename and filename.split('.')[-1] != 'jpg':
+            template_params['message'] = 'Принимаются только картинки с расширением .jpg'
+            return render_template(**template_params)
+
+        if filename:
+            local_filename = generate_random_filename(extension='.jpg')
+            form.image.data.save(os.path.join(__file__, f'../../static/img/books/{local_filename}'))
+            set_image_by_book(book, local_filename)
+
+        session.add(book)
         session.commit()
 
         return redirect('/my')
@@ -124,7 +154,7 @@ def login():
     template_params = {
         'template_name_or_list': 'login.html',
         'form': form,
-        'title': 'Аторизация'
+        'title': 'Авторизация'
     }
 
     if form.validate_on_submit():

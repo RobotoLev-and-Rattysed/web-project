@@ -2,6 +2,8 @@ import os
 from data import db_session
 from data.db_session import User, Book, Genre, Author
 
+from data.db_functions import set_image_by_book
+
 
 os.system('heroku pg:reset DATABASE -a yandexlyceum-web-project --confirm yandexlyceum-web-project')
 
@@ -38,8 +40,7 @@ for i in range(1, 7):
         book.status = 1
 
     if i == 1:
-        with open('static/img/books/test.jpg', 'rb') as f:
-            book.image = f.read()
+        set_image_by_book(book, 'test.jpg')
 
     session.add(book)
 

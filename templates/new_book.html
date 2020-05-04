@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="" method="post" class="form">
+<form class="form" method="post" action="" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <h1 align="center">{{ title }}</h1><br />
 
@@ -33,6 +33,14 @@
     {{ form.description.label }}<br />
     {{ form.description(class="form-control") }}<br />
     {% for error in form.description.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+    {% endfor %}
+
+    {{ form.image.label }}<br />
+    {{ form.image(class="form-control") }}<br />
+    {% for error in form.image.errors %}
         <p class="alert alert-danger" role="alert">
             {{ error }}
         </p>

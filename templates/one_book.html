@@ -32,6 +32,7 @@
             <!--</tr>-->
         <!--</table>-->
     <!--</div>-->
+    {% if book.status == 1 or book.user.id == current_user.id or current_user.is_moderator %}
     <div class="media">
         <img src="{{ image_url }}" alt="Изображение не загрузилось" width="150" class="mr-3">
         <div class="media-body">
@@ -39,7 +40,10 @@
             {{ book.description }}
         </div>
     </div>
+    {% else %}
+        <h4 align="center">У Вас нет доступа к данной книге :(</h4>
+    {% endif %}
 {% else %}
-<h4 align="center">Запрашиваемая книга не найдена :(</h4>
+    <h4 align="center">Запрашиваемая книга не найдена :(</h4>
 {% endif %}
 {% endblock %}

@@ -47,6 +47,7 @@ class Book(SqlAlchemyBase):
 
     description = sqlalchemy.Column(sqlalchemy.String, default='Нет описания :(')
     image = sqlalchemy.Column(sqlalchemy.Binary, nullable=True)
+    image_name = sqlalchemy.Column(sqlalchemy.String, default='no_image.jpg')
     status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)

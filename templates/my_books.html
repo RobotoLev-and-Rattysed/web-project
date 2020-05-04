@@ -16,6 +16,7 @@
                 <th>Жанр</th>
                 <th>Добавил</th>
                 <th>Статус</th>
+                <th></th>
             </tr>
             {% for book in books %}
                 <tr>
@@ -25,6 +26,7 @@
                     <td>{{ book.genre.name }}</td>
                     <td>{{ book.user.nickname }}</td>
                     <td>{{ book.status }}</td>
+                    <td><a href="/book/{{book.id}}">Смотреть</a></td>
                 </tr>
             {% endfor %}
         </table>

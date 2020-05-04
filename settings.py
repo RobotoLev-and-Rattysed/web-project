@@ -1,5 +1,5 @@
 # Настройки Flask
-csrf_key = 'b0ecS4g2Kh0Wt4C2'
+csrf_key = 'b0ecS4g2Kh0Wt4C2dhYLt7L38Z8EKl348yP2eDt05kzNP40PRHf86Q7Z36WClN5X6R6siJ960aoHL8qf'
 
 # Настройки API ВКонтакте
 vk_group_key =\
