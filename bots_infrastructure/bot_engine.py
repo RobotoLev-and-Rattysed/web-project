@@ -19,7 +19,7 @@ def get_answer(message_text, platform) -> BotAnswer:
             try:
                 answer = bot_commands[command].action(params)
             except WrongParams:
-                answer = bot_commands['help'].action(command)
+                answer = bot_commands['help'].action([command])
         else:
             answer = BotAnswer("Команда недоступна на данной платформе")
     else:

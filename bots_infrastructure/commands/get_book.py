@@ -23,7 +23,7 @@ def action(params):
 Описание: {book.description}''')
 
 
-command = BotCommand('get_book', action)
+command = BotCommand('get-book', action)
 command.platforms = {'vk', 'discord'}
 command.description = '''Получение книги по её уникальному ID
--get_book [ID]'''
+Использование: -get-book [ID]'''

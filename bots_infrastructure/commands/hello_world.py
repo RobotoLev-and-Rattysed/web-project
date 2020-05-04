@@ -5,6 +5,6 @@ def action(params):
     return BotAnswer('Hello World!', {'photo': ['static/img/hello_world.jpg']})
 
 
-command = BotCommand('hello_world', action)
+command = BotCommand('hello-world', action)
 command.platforms = {'vk', 'discord'}
 command.description = 'Поздороваюсь с миром'

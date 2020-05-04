@@ -6,7 +6,7 @@ def action(params):
     name = ' '.join(params)
     books = search(name=name)
     if len(books.all()) == 0:
-        return 'Книг с таким именем не найдено.'
+        return BotAnswer('Книг с таким именем не найдено.')
     answer = f'Результаты по запросу "{name}"\n'
     for book in books:
         answer += f'''Название книги: {book.name}
@@ -18,6 +18,7 @@ ID в библиотеке: {book.id}
     return BotAnswer(answer)
 
 
-command = BotCommand('find_book', action)
+command = BotCommand('find-book', action)
 command.platforms = {'vk', 'discord'}
-command.description = 'Поиск книги по названию'
+command.description = '''Поиск книги по названию.
+Использование: -find-book [НАЗВАНИЕ_КНИГИ]'''
