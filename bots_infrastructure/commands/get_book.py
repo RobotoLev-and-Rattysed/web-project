@@ -1,5 +1,6 @@
 from bots_infrastructure.command_engine import BotCommand, BotAnswer, WrongParams
 from data import db_session
+from data.db_functions import get_image_by_book
 from data.db_session import Book, Author, Genre
 
 
@@ -20,7 +21,7 @@ def action(params):
 Название: {book.name}
 Автор: {book.author.name}
 Жанр: {book.genre.name}
-Описание: {book.description}''')
+Описание: {book.description}''', {'photo': [image]})
 
 
 command = BotCommand('get-book', action)
