@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, request, abort
 from flask_login import login_user, logout_user, current_user, login_required
 
 from data import db_session
@@ -28,16 +28,17 @@ def main():
 def all_books():
     session = db_session.create_session()
     # books = session.query(Book).filter(Book.id <= 10)
-    books = session.query(Book).filter(Book.status == 1).order_by(Book.id)
-    return render_template('all_books.html', title='Все книги', books=books)
+    books = session.query(Book).filter(Book.status == 1).order_by(Book.id).all()
+    return render_template('books.html', title='Все книги', books=books, current_address='/books')
 
 
 @blueprint.route('/my')
 @login_required
 def my_books():
     session = db_session.create_session()
-    books = session.query(Book).filter(Book.user == current_user).order_by(Book.id)
-    return render_template('my_books.html', title='Мои книги', books=books)
+    books = session.query(Book).filter(Book.user == current_user).order_by(Book.id).all()
+    return render_template('books.html', title='Мои книги', books=books, my_books=True,
+                           current_address='/my')
 
 
 @blueprint.route('/book/<int:book_id>')
@@ -73,18 +74,6 @@ def new_book():
         if not session.query(Genre).get(form.genre.data):
             return render_template(**template_params,
                                    message="Такого жанра нет в базе")
-
-        # print(form.image.data.filename)
-        #
-        #
-        # Кусок рабочего кода из другого проекта -
-        # просто пример для написания аналогичного здесь
-        #
-        # file = form.photo.data
-        # filename = secure_filename(file.filename)
-        # if filename.split('.')[-1] in {'png', 'jpg', 'jpeg', 'gif'}:
-        #     file.save(app.config['UPLOAD_FOLDER'] + filename)
-        #     return redirect('/gallery')
 
         book = Book(
             user_id=current_user.id,
@@ -122,7 +111,7 @@ def edit_book(book_id):
     if not book:
         return redirect('/my')
 
-    if (book.user == current_user and book.status != 1) or current_user.is_moderator:
+    if (book.user == current_user and book.status == -1) or current_user.is_moderator:
         template_params = {
             'template_name_or_list': 'new_book.html',
             'form': form,
@@ -161,7 +150,7 @@ def edit_book(book_id):
             session.add(book)
             session.commit()
 
-            return redirect('/my')
+            return redirect(request.args.get('from', default='/my', type=str))
 
         form.name.data = book.name
         form.author.data = book.author_id
@@ -170,6 +159,55 @@ def edit_book(book_id):
 
         return render_template(**template_params)
     return redirect('/my')
+
+
+@blueprint.route('/requests/<string:requests_type>')
+@login_required
+def get_requests(requests_type):
+    if not current_user.is_moderator:
+        return redirect('/my')
+
+    session = db_session.create_session()
+    template_params = {
+        'template_name_or_list': 'books.html',
+        'current_address': f'/requests/{requests_type}'
+    }
+
+    books = None
+    if requests_type == 'all':
+        books = session.query(Book).filter(Book.status < 1).order_by(Book.id).all()
+        template_params['title'] = 'Все заявки'
+    elif requests_type == 'active':
+        books = session.query(Book).filter(Book.status == 0).order_by(Book.id).all()
+        template_params['title'] = 'Активные заявки'
+    elif requests_type == 'rejected':
+        books = session.query(Book).filter(Book.status == -1).order_by(Book.id).all()
+        template_params['title'] = 'Отклоненные заявки'
+    else:
+        abort(404)
+
+    template_params['books'] = books
+    return render_template(**template_params)
+
+
+@blueprint.route('/request/<int:request_id>/<string:new_request_status>')
+@login_required
+def request_action(request_id, new_request_status):
+    if not current_user.is_moderator:
+        return redirect('/my')
+
+    session = db_session.create_session()
+    book = session.query(Book).get(request_id)
+
+    if (book and
+            (new_request_status.isdigit() or
+             (new_request_status[0] == '-' and new_request_status[1:].isdigit()))
+            and -1 <= int(new_request_status) <= 1):
+        book.status = int(new_request_status)
+        print(int(new_request_status))
+        session.commit()
+
+    return redirect(request.args.get('from', default='/my', type=str))
 
 
 # <---Регистрация и авторизация--->
