@@ -37,7 +37,9 @@
         <img src="{{ image_url }}" alt="Изображение не загрузилось" width="150" class="mr-3">
         <div class="media-body">
             <h5 class="mt-0">{{ book.name }} ({{ book.author.name }}, {{ book.genre.name }})</h5>
-            {{ book.description }}
+            {% for line in book.description.split('\n') %}
+                {{ line }}<br />
+            {% endfor %}
         </div>
     </div>
     {% else %}

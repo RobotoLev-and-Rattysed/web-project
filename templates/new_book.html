@@ -38,6 +38,17 @@
         </p>
     {% endfor %}
 
+    {% if show_edit_image %}
+        <!--{{ form.edit_image.label }}<br />-->
+        <!--{{ form.edit_image(class="form-control") }}<br />-->
+        <p>{{ form.edit_image() }} {{ form.edit_image.label }}</p>
+        {% for error in form.edit_image.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
     {{ form.image.label }}<br />
     {{ form.image(class="form-control") }}<br />
     {% for error in form.image.errors %}
