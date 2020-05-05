@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 import vk
 
+import os.path as path
 import requests
 import json
 import random
@@ -48,7 +49,8 @@ def save_attachments(peer_id, file_type, file_paths) -> str:
     if file_type != 'photo':
         return ''
 
-    return ','.join([save_photo(peer_id, file_path) for file_path in file_paths])
+    return ','.join([save_photo(peer_id, path.abspath(path.join(__file__, '../..' + file_path))
+                                ) for file_path in file_paths])
 
 
 def save_photo(peer_id, file_path) -> str:
