@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align="center">
+    <br />
+    <h2>{{ title }}</h2>
+    <br />
+</div>
+{% if books %}
+    <div class="table table-borderless" align="center">
+        <table>
+            <tr class="table-active">
+                <th>ID</th>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Жанр</th>
+                <th>Добавил</th>
+                {% if my_books or current_user.is_moderator %}
+                    <th>Статус</th>
+                {% endif %}
+                <th></th>
+                {% if my_books or current_user.is_moderator %}
+                    <th></th>
+                {% endif %}
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.author.name }}</td>
+                    <td>{{ book.genre.name }}</td>
+                    <td>{{ book.user.nickname }}</td>
+                    {% if book.status == -1 %}
+                        {% set status = 'Отклонено' %}
+                        {% set can_status = [(1, 'Принять'), (0, 'На модерацию')] %}
+                    {% elif book.status == 0 %}
+                        {% set status = 'На модерации' %}
+                        {% set can_status = [(1, 'Принять'), (-1, 'Отклонить')] %}
+                    {% else %}
+                        {% set status = 'Принято' %}
+                        {% set can_status = [(0, 'На модерацию'), (-1, 'Отклонить')] %}
+                    {% endif %}
+                    {% if my_books or current_user.is_moderator %}
+                        <td>
+                            {% if current_user.is_moderator %}
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ status }}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for can in can_status %}
+                                        <a class="dropdown-item" href="/request/{{ book.id }}/{{ can[0] }}?from={{ current_address }}">{{ can[1] }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% else %}
+                                {{ status }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td><a href="/book/{{ book.id }}">Смотреть</a></td>
+                    {% if book.status == -1 or current_user.is_moderator %}
+                        <td><a href="/edit_book/{{ book.id }}?from={{ current_address }}">Редактировать</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <h4 align="center">Тут пока пусто :(</h4>
+{% endif %}
+{% endblock %}

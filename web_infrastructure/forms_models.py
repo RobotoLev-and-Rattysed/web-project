@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, TextAreaField, IntegerField, FileField, SubmitField
+from wtforms import BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
@@ -18,10 +19,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Войти')
 
 
-class NewBookForm(FlaskForm):
+class BookForm(FlaskForm):
     name = StringField('Название книги', validators=[DataRequired()])
     author = IntegerField('ID автора', validators=[DataRequired()])
     genre = IntegerField('ID жанра', validators=[DataRequired()])
     description = TextAreaField('Описание книги', validators=[DataRequired()])
+    edit_image = BooleanField('Отметьте, если хотите изменить картинку книги')
     image = FileField('Изображение книги')
-    submit = SubmitField('Добавить книгу')
+    submit = SubmitField('Сохранить изменения')
