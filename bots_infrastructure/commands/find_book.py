@@ -1,21 +1,10 @@
-from bots_infrastructure.command_engine import BotCommand, BotAnswer
+from bots_infrastructure.command_engine import BotCommand
 from search import search
 
 
 def action(params):
     name = ' '.join(params)
-    books = search(name=name)
-    if len(books.all()) == 0:
-        return BotAnswer('Книг с таким именем не найдено.')
-    answer = f'Результаты по запросу "{name}"\n'
-    for book in books:
-        answer += f'''Название книги: {book.name}
-Автор: {book.author.name}
-Жанр: {book.genre.name}
-ID в библиотеке: {book.id}
-
-'''
-    return BotAnswer(answer)
+    return search(name=name)
 
 
 command = BotCommand('find-book', action)
