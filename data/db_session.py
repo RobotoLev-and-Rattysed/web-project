@@ -25,6 +25,7 @@ def global_init():
     print(f"Подключение к базе данных по адресу {database_url}")
     engine = sa.create_engine(database_url,
                               connect_args={'sslmode': 'require'},
+                              pool_size=20,
                               echo=False)
     __factory = orm.sessionmaker(bind=engine)
 
