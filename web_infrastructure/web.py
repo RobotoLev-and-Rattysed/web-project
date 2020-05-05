@@ -5,7 +5,7 @@ from data import db_session
 from data.db_session import User, Book, Author, Genre
 from data.db_functions import generate_random_filename, get_image_by_book, set_image_by_book
 
-from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm
+from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteBookForm
 
 import os.path
 
@@ -159,6 +159,29 @@ def edit_book(book_id):
 
         return render_template(**template_params)
     return redirect('/my')
+
+
+@blueprint.route('/delete_book/<int:book_id>', methods=['GET', 'POST'])
+@login_required
+def delete_book(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+
+    if book and ((book.user == current_user and book.status == -1) or current_user.is_moderator):
+        form = DeleteBookForm()
+        template_params = {
+            'template_name_or_list': 'delete_book.html',
+            'title': 'Удаление книги',
+            'form': form,
+            'book': book,
+            'to_redirect': request.args.get('from', default='/my', type=str)
+        }
+
+        if not form.validate_on_submit():
+            return render_template(**template_params)
+        session.delete(book)
+        session.commit()
+    return redirect(request.args.get('from', default='/my', type=str))
 
 
 @blueprint.route('/requests/<string:requests_type>')

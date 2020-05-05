@@ -27,3 +27,7 @@ class BookForm(FlaskForm):
     edit_image = BooleanField('Отметьте, если хотите изменить картинку книги')
     image = FileField('Изображение книги')
     submit = SubmitField('Сохранить изменения')
+
+
+class DeleteBookForm(FlaskForm):
+    submit = SubmitField('Удалить книгу')

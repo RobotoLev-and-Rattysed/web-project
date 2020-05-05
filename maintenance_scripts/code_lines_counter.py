@@ -1,8 +1,9 @@
 import os
+import os.path as path
 
 lang_lines = {}
 
-for current_dir, dirs, files in os.walk('.'):
+for current_dir, dirs, files in os.walk(path.abspath(path.join(__file__, "../.."))):
     if any([name in current_dir for name in ['.\.git', '.\.idea']]):
         continue
 

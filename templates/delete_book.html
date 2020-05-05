@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form class="form" method="post" action="">
+    {{ form.hidden_tag() }}
+    <h1 align="center">{{ title }}</h1><br />
+
+    <div class="alert alert-danger" role="alert">
+        Подтвердите удаление книги id{{ book.id }} "{{ book.name }}"
+        ({{ book.author.name }}, {{ book.genre.name }}) [by {{ book.user.nickname }}].
+        Будьте осторожны: восстановить данные будет невозможно!
+    </div>
+
+    <p>{{ form.submit(type="submit", class="btn btn-danger") }}
+        <a class="btn btn-success" href="{{ to_redirect }}">
+            Отменить удаление</a>
+    </p>
+
+    {% if message %}
+        <p class="alert alert-danger" role="alert">
+            {{ message }}
+        </p>
+    {% endif %}
+</form>
+{% endblock %}
