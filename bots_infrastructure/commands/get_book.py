@@ -16,6 +16,7 @@ def action(params):
                                                               Book.status == 1).first()
     if book is None:
         return BotAnswer(f'''Книга с данным ID не найдена на сервере''')
+    image = get_image_by_book(book)
     return BotAnswer(f'''Книга найдена!
 
 Название: {book.name}
