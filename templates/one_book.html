@@ -7,31 +7,6 @@
     <br />
 </div>
 {% if book %}
-    <!--<div class="table table-borderless" align="center">-->
-        <!--<table>-->
-            <!--<tr class="table-active">-->
-                <!--<th>ID</th>-->
-                <!--<th>Название</th>-->
-                <!--<th>Автор</th>-->
-                <!--<th>Жанр</th>-->
-                <!--<th>Добавил</th>-->
-                <!--<th>Статус</th>-->
-                <!--<th>Изображение</th>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td>{{ book.id }}</td>-->
-                <!--<td>{{ book.name }}</td>-->
-                <!--<td>{{ book.author.name }}</td>-->
-                <!--<td>{{ book.genre.name }}</td>-->
-                <!--<td>{{ book.user.nickname }}</td>-->
-                <!--<td>{{ book.status }}</td>-->
-                <!--{% if book.image %}-->
-                    <!--<td><img src="{{ book.image }}" alt="изображение не загрузилось :("-->
-                             <!--width="150" class="rounded"/></td>-->
-                <!--{% endif %}-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</div>-->
     {% if book.status == 1 or book.user.id == current_user.id or current_user.is_moderator %}
     <div class="media">
         <img src="{{ image_url }}" alt="Изображение не загрузилось" width="150" class="mr-3">
