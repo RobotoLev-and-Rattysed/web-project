@@ -17,12 +17,13 @@ def action(params):
     if book is None:
         return BotAnswer(f'''Книга с данным ID не найдена на сервере''')
     image = get_image_by_book(book)
+    description = book.description
     return BotAnswer(f'''Книга найдена!
 
 Название: {book.name}
 Автор: {book.author.name}
 Жанр: {book.genre.name}
-Описание: {book.description}''', {'photo': [image]})
+Описание: {description}''', {'photo': [image]})
 
 
 command = BotCommand('get-book', action)

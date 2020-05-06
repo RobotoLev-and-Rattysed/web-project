@@ -8,6 +8,7 @@ from data.db_functions import generate_random_filename, get_image_by_book, set_i
 from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteBookForm
 
 import os.path
+import wikipedia
 
 
 blueprint = Blueprint(__name__, 'web', template_folder='templates')
@@ -74,13 +75,21 @@ def new_book():
         if not session.query(Genre).get(form.genre.data):
             return render_template(**template_params,
                                    message="Такого жанра нет в базе")
-
+        description = form.description.data
+        if description == '':
+            wikipedia.set_lang('ru')
+            try:
+                description = wikipedia.summary(form.author.data +
+                                                ' ' +
+                                                form.name.data, sentences=3)
+            except wikipedia.PageError:
+                description = 'Описание отсутствует'
         book = Book(
             user_id=current_user.id,
             name=form.name.data,
             author_id=form.author.data,
             genre_id=form.genre.data,
-            description=form.description.data
+            description=description
         )
 
         filename = form.image.data.filename

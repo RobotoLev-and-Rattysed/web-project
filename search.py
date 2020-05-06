@@ -20,9 +20,9 @@ def search(name='', author='', genre=''):
     answer = f'Результаты по запросу "{name + author + genre}"\n'
     for book in books:
         answer += f'''Название книги: {book.name}
-    Автор: {book.author.name}
-    Жанр: {book.genre.name}
-    ID в библиотеке: {book.id}
+Автор: {book.author.name}
+Жанр: {book.genre.name}
+ID в библиотеке: {book.id}
 
-    '''
+'''
     return BotAnswer(answer)
