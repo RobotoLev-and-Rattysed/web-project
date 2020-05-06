@@ -22,8 +22,8 @@ test = User(email='test@test.ru', nickname='Test')
 test.set_password('test')
 session.add(test)
 
-session.add(Author(name='Тестовый автор'))
-session.add(Genre(name='Тестовый жанр'))
+session.add(Author(name='Тестовый автор', user_id=1, status=0))
+session.add(Genre(name='Тестовый жанр', user_id=2, status=1))
 
 for i in range(1, 7):
     book = Book(user_id=1,

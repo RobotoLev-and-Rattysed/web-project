@@ -184,6 +184,51 @@ def delete_book(book_id):
     return redirect(request.args.get('from', default='/my', type=str))
 
 
+@blueprint.route('/book_data/<string:type_of_sorting>')
+@login_required
+def all_genres(type_of_sorting):
+    if type_of_sorting not in {'all', 'my', 'requests'}:
+        return redirect('/book_data/all')
+    if type_of_sorting == 'requests' and not current_user.is_moderator:
+        return redirect('/book/all')
+
+    session = db_session.create_session()
+    template_params = {
+        'template_name_or_list': 'book_data.html'
+    }
+
+    if type_of_sorting == 'all':
+        template_params['title'] = 'Общедоступные данные для книг'
+        template_params['authors'] = session.query(Author).filter(
+            Author.status == 1
+        ).order_by(Author.id).all()
+        template_params['genres'] = session.query(Genre).filter(
+            Genre.status == 1
+        ).order_by(Genre.id).all()
+        template_params['current_address'] = '/book_data/all'
+    elif type_of_sorting == 'my':
+        template_params['title'] = 'Добавленные мной данные для книг'
+        template_params['authors'] = session.query(Author).filter(
+            Author.user == current_user
+        ).order_by(Author.id).all()
+        template_params['genres'] = session.query(Genre).filter(
+            Genre.user == current_user
+        ).order_by(Genre.id).all()
+        template_params['current_address'] = '/book_data/my'
+        template_params['my_book_data'] = True
+    else:
+        template_params['title'] = 'Заявки данных для книг'
+        template_params['authors'] = session.query(Author).filter(
+            Author.status < 1
+        ).order_by(Author.id).all()
+        template_params['genres'] = session.query(Genre).filter(
+            Genre.status < 1
+        ).order_by(Genre.id).all()
+        template_params['current_address'] = '/book_data/requests'
+
+    return render_template(**template_params)
+
+
 @blueprint.route('/requests/<string:requests_type>')
 @login_required
 def get_requests(requests_type):
@@ -213,20 +258,26 @@ def get_requests(requests_type):
     return render_template(**template_params)
 
 
-@blueprint.route('/request/<int:request_id>/<string:new_request_status>')
+@blueprint.route('/request/<string:modified_class>/<int:modified_id>/<string:new_request_status>')
 @login_required
-def request_action(request_id, new_request_status):
-    if not current_user.is_moderator:
+def request_action(modified_class, modified_id, new_request_status):
+    if not current_user.is_moderator or modified_class not in {'book', 'author', 'genre'}:
         return redirect('/my')
 
     session = db_session.create_session()
-    book = session.query(Book).get(request_id)
 
-    if (book and
+    if modified_class == 'book':
+        element = session.query(Book).get(modified_id)
+    elif modified_class == 'author':
+        element = session.query(Author).get(modified_id)
+    else:
+        element = session.query(Genre).get(modified_id)
+
+    if (element and
             (new_request_status.isdigit() or
              (new_request_status[0] == '-' and new_request_status[1:].isdigit()))
             and -1 <= int(new_request_status) <= 1):
-        book.status = int(new_request_status)
+        element.status = int(new_request_status)
         print(int(new_request_status))
         session.commit()
 

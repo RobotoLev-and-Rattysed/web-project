@@ -15,6 +15,8 @@ class User(SqlAlchemyBase, UserMixin):
     is_moderator = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     books = orm.relationship("Book", back_populates='user', lazy='subquery')
+    authors = orm.relationship("Author", back_populates='user', lazy='subquery')
+    genres = orm.relationship("Genre", back_populates='user', lazy='subquery')
 
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
@@ -58,6 +60,10 @@ class Author(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    user = orm.relationship('User', back_populates='authors', lazy='subquery')
 
     books = orm.relation('Book', back_populates='author', lazy='subquery')
 
@@ -69,6 +75,10 @@ class Genre(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    user = orm.relationship('User', back_populates='genres', lazy='subquery')
 
     books = orm.relation('Book', back_populates='genre', lazy='subquery')
 

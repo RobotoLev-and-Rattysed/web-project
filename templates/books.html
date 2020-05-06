@@ -50,7 +50,7 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% for can in can_status %}
-                                        <a class="dropdown-item" href="/request/{{ book.id }}/{{ can[0] }}?from={{ current_address }}">{{ can[1] }}</a>
+                                        <a class="dropdown-item" href="/request/book/{{ book.id }}/{{ can[0] }}?from={{ current_address }}">{{ can[1] }}</a>
                                     {% endfor %}
                                 </div>
                             </div>
