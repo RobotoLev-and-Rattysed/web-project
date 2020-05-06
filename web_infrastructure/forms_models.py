@@ -26,8 +26,29 @@ class BookForm(FlaskForm):
     description = TextAreaField('Описание книги')
     edit_image = BooleanField('Отметьте, если хотите изменить картинку книги')
     image = FileField('Изображение книги')
-    submit = SubmitField('Сохранить изменения')
+    submit = SubmitField('Сохранить')
 
 
 class DeleteBookForm(FlaskForm):
     submit = SubmitField('Удалить книгу')
+
+
+class AuthorForm(FlaskForm):
+    name = StringField('ФИО автора', validators=[DataRequired()])
+    submit = SubmitField('Сохранить')
+
+
+class DeleteAuthorForm(FlaskForm):
+    submit = SubmitField('Удалить автора')
+
+
+class GenreForm(FlaskForm):
+    name = StringField('Название жанра', validators=[DataRequired()])
+    submit = SubmitField('Сохранить')
+
+
+class DeleteGenreForm(FlaskForm):
+    submit = SubmitField('Удалить жанр')
+
+
+

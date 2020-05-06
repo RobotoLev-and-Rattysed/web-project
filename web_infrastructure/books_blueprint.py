@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, request, abort
-from flask_login import login_user, logout_user, current_user, login_required
+from flask import Blueprint, render_template, redirect, request
+from flask_login import current_user, login_required
 
 from data import db_session
 from data.db_session import User, Book, Author, Genre
@@ -7,22 +7,12 @@ from data.db_functions import generate_random_filename, get_image_by_book, set_i
 
 from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteBookForm
 
+import os
 import os.path
 import wikipedia
 
 
-blueprint = Blueprint(__name__, 'web', template_folder='templates')
-
-
-# <---Главная страница--->
-
-
-@blueprint.route('/')
-def main():
-    return render_template('greeting.html', title='Электронная библиотека')
-
-
-# <---Все о книгах--->
+blueprint = Blueprint(__name__, 'books_blueprint', template_folder='templates')
 
 
 @blueprint.route('/books')
@@ -69,12 +59,16 @@ def new_book():
 
     if form.validate_on_submit():
         session = db_session.create_session()
-        if not session.query(Author).get(form.author.data):
+
+        author = session.query(Author).get(form.author.data)
+        genre = session.query(Genre).get(form.genre.data)
+        if not author or author.status != 1:
             return render_template(**template_params,
-                                   message="Такого автора нет в базе")
-        if not session.query(Genre).get(form.genre.data):
+                                   message="Некорректный ID автора")
+        if not genre or genre.status != 1:
             return render_template(**template_params,
-                                   message="Такого жанра нет в базе")
+                                   message="Некорректный ID жанра")
+
         description = form.description.data
         if description == '':
             wikipedia.set_lang('ru')
@@ -191,118 +185,3 @@ def delete_book(book_id):
         session.delete(book)
         session.commit()
     return redirect(request.args.get('from', default='/my', type=str))
-
-
-@blueprint.route('/requests/<string:requests_type>')
-@login_required
-def get_requests(requests_type):
-    if not current_user.is_moderator:
-        return redirect('/my')
-
-    session = db_session.create_session()
-    template_params = {
-        'template_name_or_list': 'books.html',
-        'current_address': f'/requests/{requests_type}'
-    }
-
-    books = None
-    if requests_type == 'all':
-        books = session.query(Book).filter(Book.status < 1).order_by(Book.id).all()
-        template_params['title'] = 'Все заявки'
-    elif requests_type == 'active':
-        books = session.query(Book).filter(Book.status == 0).order_by(Book.id).all()
-        template_params['title'] = 'Активные заявки'
-    elif requests_type == 'rejected':
-        books = session.query(Book).filter(Book.status == -1).order_by(Book.id).all()
-        template_params['title'] = 'Отклоненные заявки'
-    else:
-        abort(404)
-
-    template_params['books'] = books
-    return render_template(**template_params)
-
-
-@blueprint.route('/request/<int:request_id>/<string:new_request_status>')
-@login_required
-def request_action(request_id, new_request_status):
-    if not current_user.is_moderator:
-        return redirect('/my')
-
-    session = db_session.create_session()
-    book = session.query(Book).get(request_id)
-
-    if (book and
-            (new_request_status.isdigit() or
-             (new_request_status[0] == '-' and new_request_status[1:].isdigit()))
-            and -1 <= int(new_request_status) <= 1):
-        book.status = int(new_request_status)
-        print(int(new_request_status))
-        session.commit()
-
-    return redirect(request.args.get('from', default='/my', type=str))
-
-
-# <---Регистрация и авторизация--->
-
-
-@blueprint.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect('/')
-
-    form = RegisterForm()
-    template_params = {
-        'template_name_or_list': 'register.html',
-        'form': form,
-        'title': 'Регистрация'
-    }
-
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
-            return render_template(**template_params, message="Пароли не совпадают")
-
-        session = db_session.create_session()
-        if session.query(User).filter(User.email == form.email.data).first():
-            return render_template(**template_params,
-                                   message="Пользователь с таким e-mail уже существует")
-        if session.query(User).filter(User.nickname == form.nickname.data).first():
-            return render_template(**template_params,
-                                   message="Пользователь с таким ником уже существует")
-
-        user = User(email=form.email.data,
-                    nickname=form.nickname.data)
-        user.set_password(form.password.data)
-        session.add(user)
-        session.commit()
-
-        return redirect('/')
-    return render_template(**template_params, )
-
-
-@blueprint.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect('/')
-
-    form = LoginForm()
-    template_params = {
-        'template_name_or_list': 'login.html',
-        'form': form,
-        'title': 'Авторизация'
-    }
-
-    if form.validate_on_submit():
-        session = db_session.create_session()
-        user = session.query(User).filter(User.email == form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect('/')
-        return render_template(**template_params, message="Неправильный e-mail или пароль")
-    return render_template(**template_params)
-
-
-@blueprint.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect('/')

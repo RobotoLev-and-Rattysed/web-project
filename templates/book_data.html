@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div align="center">
+    <br />
+    <h2>{{ title }}</h2>
+    <br />
+</div>
+<div class="container">
+    <div class="row">
+        <div class="table table-borderless col" align="left">
+            <h3 align="left">Список авторов</h3>
+            <br />
+            {% if authors %}
+                <table>
+                    <tr class="table-active">
+                        <th>ID</th>
+                        <th>Название</th>
+                        {% if my_book_data or current_user.is_moderator %}
+                            <th>Статус</th>
+                        {% endif %}
+                        {% if current_user.is_moderator %}
+                            <th>Добавил</th>
+                        {% endif %}
+                    </tr>
+                    {% for author in authors %}
+                        <tr>
+                            <td>{{ author.id }}</td>
+                            <td>{{ author.name }}</td>
+                            {% if author.status == -1 %}
+                                {% set status = 'Отклонено' %}
+                                {% set can_status = [(1, 'Принять'), (0, 'На модерацию')] %}
+                            {% elif author.status == 0 %}
+                                {% set status = 'На модерации' %}
+                                {% set can_status = [(1, 'Принять'), (-1, 'Отклонить')] %}
+                            {% else %}
+                                {% set status = 'Принято' %}
+                                {% set can_status = [(0, 'На модерацию'), (-1, 'Отклонить')] %}
+                            {% endif %}
+
+                            {% if my_book_data or current_user.is_moderator %}
+                                {% if current_user.is_moderator %}
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ status }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            {% for can in can_status %}
+                                                <a class="dropdown-item" href="/request/author/{{ author.id }}/{{ can[0] }}?from={{ current_address }}">{{ can[1] }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ author.user.nickname }}</td>
+                                {% else %}
+                                    <td>{{ status }}</td>
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h4 align="left">Авторов пока нет</h4>
+            {% endif %}
+        </div>
+
+        <div class="table table-borderless col" align="right">
+            <h3 align="right">Список жанров</h3>
+            <br />
+            {% if genres %}
+                <table>
+                    <tr class="table-active">
+                        <th>ID</th>
+                        <th>Название</th>
+                        {% if my_book_data or current_user.is_moderator %}
+                            <th>Статус</th>
+                        {% endif %}
+                        {% if current_user.is_moderator %}
+                            <th>Добавил</th>
+                        {% endif %}
+                    </tr>
+                    {% for genre in genres %}
+                        <tr>
+                            <td>{{ genre.id }}</td>
+                            <td>{{ genre.name }}</td>
+                            {% if genre.status == -1 %}
+                                {% set status = 'Отклонено' %}
+                                {% set can_status = [(1, 'Принять'), (0, 'На модерацию')] %}
+                            {% elif genre.status == 0 %}
+                                {% set status = 'На модерации' %}
+                                {% set can_status = [(1, 'Принять'), (-1, 'Отклонить')] %}
+                            {% else %}
+                                {% set status = 'Принято' %}
+                                {% set can_status = [(0, 'На модерацию'), (-1, 'Отклонить')] %}
+                            {% endif %}
+
+                            {% if my_book_data or current_user.is_moderator %}
+                                {% if current_user.is_moderator %}
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ status }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            {% for can in can_status %}
+                                                <a class="dropdown-item" href="/request/genre/{{ genre.id }}/{{ can[0] }}?from={{ current_address }}">{{ can[1] }}</a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ genre.user.nickname }}</td>
+                                {% else %}
+                                    <td>{{ status }}</td>
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h4 align="right">Жанров пока нет</h4>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
