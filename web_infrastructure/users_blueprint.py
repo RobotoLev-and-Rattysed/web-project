@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from data import db_session
 from data.db_session import User
 
-from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteBookForm
+from web_infrastructure.forms_models import RegisterForm, LoginForm
 
 
 blueprint = Blueprint(__name__, 'users_blueprint', template_folder='templates')

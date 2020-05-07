@@ -52,6 +52,9 @@ def request_action(modified_class, modified_id, new_request_status):
     else:
         element = session.query(Genre).get(modified_id)
 
+    if modified_class != 'book' and len(element.books) > 0:
+        return redirect(request.args.get('from', default='/book_data/my', type=str))
+
     if (element and
             (new_request_status.isdigit() or
              (new_request_status[0] == '-' and new_request_status[1:].isdigit()))

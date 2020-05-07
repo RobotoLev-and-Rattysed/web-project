@@ -22,6 +22,10 @@
                         {% if current_user.is_moderator %}
                             <th>Добавил</th>
                         {% endif %}
+                        {% if my_book_data or current_user.is_moderator %}
+                            <th></th>
+                            <th></th>
+                        {% endif %}
                     </tr>
                     {% for author in authors %}
                         <tr>
@@ -57,6 +61,12 @@
                                     <td>{{ status }}</td>
                                 {% endif %}
                             {% endif %}
+                            {% if (my_book_data and author.status == -1) or current_user.is_moderator %}
+                                <td><a href="/edit_author/{{ author.id }}?from={{ current_address }}">Редактировать</a></td>
+                                {% if not author.books %}
+                                    <td><a href="/delete_author/{{ author.id }}?from={{ current_address }}">Удалить</a></td>
+                                {% endif %}
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
@@ -78,6 +88,10 @@
                         {% endif %}
                         {% if current_user.is_moderator %}
                             <th>Добавил</th>
+                        {% endif %}
+                        {% if my_book_data or current_user.is_moderator %}
+                            <th></th>
+                            <th></th>
                         {% endif %}
                     </tr>
                     {% for genre in genres %}
@@ -112,6 +126,12 @@
                                 <td>{{ genre.user.nickname }}</td>
                                 {% else %}
                                     <td>{{ status }}</td>
+                                {% endif %}
+                            {% endif %}
+                            {% if (my_book_data and genre.status == -1) or current_user.is_moderator %}
+                                <td><a href="/edit_genre/{{ genre.id }}?from={{ current_address }}">Редактировать</a></td>
+                                {% if not genre.books %}
+                                    <td><a href="/delete_genre/{{ genre.id }}?from={{ current_address }}">Удалить</a></td>
                                 {% endif %}
                             {% endif %}
                         </tr>

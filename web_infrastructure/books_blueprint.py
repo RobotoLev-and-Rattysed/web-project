@@ -5,12 +5,11 @@ from data import db_session
 from data.db_session import User, Book, Author, Genre
 from data.db_functions import generate_random_filename, get_image_by_book, set_image_by_book
 
-from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteBookForm
+from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteForm
 
 import os
 import os.path
 import wikipedia
-
 
 blueprint = Blueprint(__name__, 'books_blueprint', template_folder='templates')
 
@@ -174,12 +173,13 @@ def delete_book(book_id):
     book = session.query(Book).get(book_id)
 
     if book and ((book.user == current_user and book.status == -1) or current_user.is_moderator):
-        form = DeleteBookForm()
+        form = DeleteForm()
         template_params = {
-            'template_name_or_list': 'delete_book.html',
+            'template_name_or_list': 'delete_element.html',
             'title': 'Удаление книги',
+            'text': f'Подтвердите удаление книги id{book.id} "{book.name}" '
+                    f'({book.author.name}, {book.genre.name}) [by {book.user.nickname}].',
             'form': form,
-            'book': book,
             'to_redirect': request.args.get('from', default='/my', type=str)
         }
 

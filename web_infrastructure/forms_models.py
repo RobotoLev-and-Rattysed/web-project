@@ -30,8 +30,8 @@ class BookForm(FlaskForm):
     submit = SubmitField('Сохранить')
 
 
-class DeleteBookForm(FlaskForm):
-    submit = SubmitField('Удалить книгу')
+class DeleteForm(FlaskForm):
+    submit = SubmitField('Удалить объект')
 
 
 class AuthorForm(FlaskForm):
@@ -39,17 +39,6 @@ class AuthorForm(FlaskForm):
     submit = SubmitField('Сохранить')
 
 
-class DeleteAuthorForm(FlaskForm):
-    submit = SubmitField('Удалить автора')
-
-
 class GenreForm(FlaskForm):
     name = StringField('Название жанра', validators=[DataRequired()])
     submit = SubmitField('Сохранить')
-
-
-class DeleteGenreForm(FlaskForm):
-    submit = SubmitField('Удалить жанр')
-
-
-
