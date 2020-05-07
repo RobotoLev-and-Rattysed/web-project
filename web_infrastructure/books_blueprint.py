@@ -69,7 +69,7 @@ def new_book():
             return render_template(**template_params,
                                    message="Некорректный ID жанра")
 
-        description = wiki_description(form.description.data, form.name.data, form.author.data)
+        description = wiki_description(form.description.data, form.name.data, author.name)
 
         book = Book(
             user_id=current_user.id,
@@ -116,14 +116,16 @@ def edit_book(book_id):
         }
 
         if form.validate_on_submit():
-            if not session.query(Author).get(form.author.data):
+            author = session.query(Author).get(form.author.data)
+            genre = session.query(Genre).get(form.genre.data)
+            if not author or author.status != 1:
                 return render_template(**template_params,
-                                       message="Такого автора нет в базе")
-            if not session.query(Genre).get(form.genre.data):
+                                       message="Некорректный ID автора")
+            if not genre or genre.status != 1:
                 return render_template(**template_params,
-                                       message="Такого жанра нет в базе")
+                                       message="Некорректный ID жанра")
 
-            description = wiki_description(form.description.data, form.name.data, form.author.data)
+            description = wiki_description(form.description.data, form.name.data, author.name)
 
             book.name = form.name.data
             book.author_id = form.author.data
