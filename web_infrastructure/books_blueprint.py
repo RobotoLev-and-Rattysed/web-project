@@ -69,7 +69,10 @@ def new_book():
             return render_template(**template_params,
                                    message="Некорректный ID жанра")
 
-        description = wiki_description(form.description.data, form.name.data, author.name)
+        description = wiki_description(form.description.data,
+                                       form.name.data,
+                                       author.name,
+                                       genre.name)
 
         book = Book(
             user_id=current_user.id,
@@ -125,7 +128,10 @@ def edit_book(book_id):
                 return render_template(**template_params,
                                        message="Некорректный ID жанра")
 
-            description = wiki_description(form.description.data, form.name.data, author.name)
+            description = wiki_description(form.description.data,
+                                           form.name.data,
+                                           author.name,
+                                           genre.name)
 
             book.name = form.name.data
             book.author_id = form.author.data
@@ -184,12 +190,19 @@ def delete_book(book_id):
     return redirect(request.args.get('from', default='/my', type=str))
 
 
-def wiki_description(description, book_name, author_name):
+def wiki_description(description, book_name, author_name, genre_name):
     if description == '':
         wikipedia.set_lang('ru')
-        try:
-            description = wikipedia.summary(f'книга {author_name} {book_name}', sentences=3)
-        except wikipedia.PageError:
-            description = 'Описание отсутствует'
+        search_text = f'{author_name} {book_name} {genre_name}'
+        # try:
+        #     description = wikipedia.summary(search_text, sentences=3)
+        # except wikipedia.PageError:
+        #     description = 'Описание отсутствует'
+        results = wikipedia.search(search_text)
+        if not results:
+            description = "Описание отсутствует"
+        else:
+            page = wikipedia.page(results[0])
+            description = page.content[:500] + "..."
 
     return description
