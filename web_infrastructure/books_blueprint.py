@@ -130,11 +130,21 @@ def edit_book(book_id):
             if not session.query(Genre).get(form.genre.data):
                 return render_template(**template_params,
                                        message="Такого жанра нет в базе")
+            description = form.description.data
+            if description == '':
+                author = session.query(Author).filter(Author.id == form.author.data).first()
+                wikipedia.set_lang('ru')
+                try:
+                    description = wikipedia.summary('книга' + author.name +
+                                                    ' ' +
+                                                    form.name.data, sentences=3)
+                except wikipedia.PageError:
+                    description = 'Описание отсутствует'
 
             book.name = form.name.data
             book.author_id = form.author.data
             book.genre_id = form.genre.data
-            book.description = form.description.data
+            book.description = description
 
             if form.edit_image.data:
                 filename = form.image.data.filename
