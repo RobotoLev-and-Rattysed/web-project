@@ -74,7 +74,7 @@ def new_book():
             author = session.query(Author).filter(Author.id == form.author.data).first()
             wikipedia.set_lang('ru')
             try:
-                description = wikipedia.summary('книга' + author.name +
+                description = wikipedia.summary('книга ' + author.name +
                                                 ' ' +
                                                 form.name.data, sentences=3)
             except wikipedia.PageError:
@@ -135,7 +135,7 @@ def edit_book(book_id):
                 author = session.query(Author).filter(Author.id == form.author.data).first()
                 wikipedia.set_lang('ru')
                 try:
-                    description = wikipedia.summary('книга' + author.name +
+                    description = wikipedia.summary('книга ' + author.name +
                                                     ' ' +
                                                     form.name.data, sentences=3)
                 except wikipedia.PageError:
