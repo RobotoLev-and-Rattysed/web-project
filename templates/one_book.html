@@ -9,9 +9,12 @@
 {% if book %}
     {% if book.status == 1 or book.user.id == current_user.id or current_user.is_moderator %}
     <div class="media">
-        <img src="{{ image_url }}" alt="Изображение не загрузилось" width="150" class="mr-3">
+        <img src="{{ image_url }}" alt="Изображение не загрузилось" width="300" class="mr-3">
         <div class="media-body">
             <h5 class="mt-0">{{ book.name }} ({{ book.author.name }}, {{ book.genre.name }}) [by {{ book.user.nickname }}]</h5>
+
+            <a class="btn btn-primary" href="/download/{{ book.id }}">Скачать</a>
+            <br />
             {% for line in book.description.split('\n') %}
                 {{ line }}<br />
             {% endfor %}

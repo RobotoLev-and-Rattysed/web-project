@@ -1,15 +1,17 @@
-from flask import Blueprint, render_template, redirect, request
+from flask import Blueprint, render_template, redirect, request, send_file
 from flask_login import current_user, login_required
 
 from data import db_session
 from data.db_session import User, Book, Author, Genre
-from data.db_functions import generate_random_filename, get_image_by_book, set_image_by_book
+from data.db_functions import *
 
 from web_infrastructure.forms_models import RegisterForm, LoginForm, BookForm, DeleteForm
 
 import os
 import os.path
+
 import wikipedia
+from PIL import Image
 
 blueprint = Blueprint(__name__, 'books_blueprint', template_folder='templates')
 
@@ -53,7 +55,7 @@ def new_book():
         'template_name_or_list': 'new_book.html',
         'form': form,
         'title': 'Добавление книги',
-        'show_edit_image': False
+        'show_edit_booleans': False
     }
 
     if form.validate_on_submit():
@@ -81,16 +83,10 @@ def new_book():
             description=description
         )
 
-        filename = form.image.data.filename
-        if filename and filename.split('.')[-1] != 'jpg':
-            template_params['message'] = 'Принимаются только картинки с расширением .jpg'
+        if not handle_text(form, book, template_params):
             return render_template(**template_params)
-
-        if filename:
-            local_filename = generate_random_filename(extension='.jpg')
-            form.image.data.save(os.path.abspath(
-                os.path.join(__file__, f'../../static/img/books/{local_filename}')))
-            set_image_by_book(book, local_filename)
+        if not handle_image(form, book, template_params):
+            return render_template(**template_params)
 
         session.add(book)
         session.commit()
@@ -114,7 +110,7 @@ def edit_book(book_id):
             'template_name_or_list': 'new_book.html',
             'form': form,
             'title': 'Редактирование книги',
-            'show_edit_image': True
+            'show_edit_booleans': True
         }
 
         if form.validate_on_submit():
@@ -137,20 +133,10 @@ def edit_book(book_id):
             book.genre_id = form.genre.data
             book.description = description
 
-            if form.edit_image.data:
-                filename = form.image.data.filename
-                if filename and filename.split('.')[-1] != 'jpg':
-                    template_params['message'] = 'Принимаются только картинки с расширением .jpg'
-                    return render_template(**template_params)
-
-                if filename:
-                    local_filename = generate_random_filename(extension='.jpg')
-                    form.image.data.save(os.path.abspath(
-                        os.path.join(__file__, f'../../static/img/books/{local_filename}')))
-                    set_image_by_book(book, local_filename)
-                else:
-                    book.image = None
-                    book.image_name = 'no_image.jpg'
+            if not handle_text(form, book, template_params):
+                return render_template(**template_params)
+            if not handle_image(form, book, template_params):
+                return render_template(**template_params)
 
             session.add(book)
             session.commit()
@@ -190,14 +176,23 @@ def delete_book(book_id):
     return redirect(request.args.get('from', default='/my', type=str))
 
 
+@blueprint.route('/download/<int:book_id>')
+def downloader(book_id):
+    session = db_session.create_session()
+    book = session.query(Book).get(book_id)
+
+    if not book or (not current_user.is_moderator and book.status != 1):
+        return redirect('/books')
+
+    return send_file(os.path.abspath(os.path.join(__name__, '..' + get_text_by_book(book))),
+                     as_attachment=True)
+
+
 def wiki_description(description, book_name, author_name, genre_name):
     if description == '':
         wikipedia.set_lang('ru')
+
         search_text = f'{author_name} {book_name} {genre_name}'
-        # try:
-        #     description = wikipedia.summary(search_text, sentences=3)
-        # except wikipedia.PageError:
-        #     description = 'Описание отсутствует'
         results = wikipedia.search(search_text)
         if not results:
             description = "Описание отсутствует"
@@ -206,3 +201,51 @@ def wiki_description(description, book_name, author_name, genre_name):
             description = page.content[:500] + "..."
 
     return description
+
+
+def handle_image(form, book, template_params):
+    if not form.edit_image.data:
+        return True
+
+    filename = form.image.data.filename
+    if filename and filename.split('.')[-1] != 'jpg':
+        template_params['message'] = 'Принимаются только картинки с расширением .jpg'
+        return False
+
+    if filename:
+        local_filename = generate_random_filename(extension='.jpg')
+        abspath = os.path.abspath(
+            os.path.join(__file__, f'../../static/img/books/{local_filename}'))
+        form.image.data.save(abspath)
+
+        im = Image.open(abspath)
+        width, height = im.size
+        if not (300 <= width <= 900 and 300 <= height <= 900):
+            template_params['message'] = 'Размеры картинок должны быть от 300 до 900 пикселей'
+            return False
+    else:
+        local_filename = 'no_image.jpg'
+
+    set_image_by_book(book, local_filename)
+    return True
+
+
+def handle_text(form, book, template_params):
+    if template_params['show_edit_booleans'] and not form.edit_text.data:
+        return True
+
+    filename = form.text.data.filename
+    if not filename:
+        template_params['message'] = 'Нельзя создать книгу без текста'
+        return False
+    if filename.split('.')[-1] not in '.txt':
+        template_params['message'] = 'Принимаются только тексты с расширением .txt'
+        return False
+
+    local_filename = f"ieb_book_id{book.id}_{generate_random_filename(extension='.txt')}"
+    abspath = os.path.abspath(
+        os.path.join(__file__, f'../../static/txt/books/{local_filename}'))
+    form.text.data.save(abspath)
+
+    set_text_by_book(book, local_filename)
+    return True

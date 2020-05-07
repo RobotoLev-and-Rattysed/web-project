@@ -2,7 +2,7 @@ import os
 from data import db_session
 from data.db_session import User, Book, Genre, Author
 
-from data.db_functions import set_image_by_book
+from data.db_functions import set_text_by_book, set_image_by_book
 
 
 os.system('heroku pg:reset DATABASE -a yandexlyceum-web-project --confirm yandexlyceum-web-project')
@@ -22,7 +22,7 @@ test = User(email='test@test.ru', nickname='Test')
 test.set_password('test')
 session.add(test)
 
-session.add(Author(name='Тестовый автор', user_id=1, status=0))
+session.add(Author(name='Тестовый автор', user_id=1, status=1))
 session.add(Genre(name='Тестовый жанр', user_id=2, status=1))
 
 for i in range(1, 7):
@@ -30,6 +30,7 @@ for i in range(1, 7):
                 name=f'Тестовая книга {i}',
                 author_id=1,
                 genre_id=1)
+    set_text_by_book(book, 'test.txt')
 
     if i % 2 == 0:
         book.user_id = 2

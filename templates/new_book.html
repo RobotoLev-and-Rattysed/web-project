@@ -38,9 +38,24 @@
         </p>
     {% endfor %}
 
-    {% if show_edit_image %}
-        <!--{{ form.edit_image.label }}<br />-->
-        <!--{{ form.edit_image(class="form-control") }}<br />-->
+    {% if show_edit_booleans %}
+        <p>{{ form.edit_text() }} {{ form.edit_text.label }}</p>
+        {% for error in form.edit_text.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    {{ form.text.label }}<br />
+    {{ form.text(class="form-control") }}<br />
+    {% for error in form.text.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+    {% endfor %}
+
+    {% if show_edit_booleans %}
         <p>{{ form.edit_image() }} {{ form.edit_image.label }}</p>
         {% for error in form.edit_image.errors %}
             <p class="alert alert-danger" role="alert">

@@ -48,9 +48,12 @@ class Book(SqlAlchemyBase):
     genre = orm.relationship('Genre', back_populates='books', lazy='subquery')
 
     description = sqlalchemy.Column(sqlalchemy.String, default='Нет описания :(')
+    status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
     image = sqlalchemy.Column(sqlalchemy.Binary, nullable=True)
     image_name = sqlalchemy.Column(sqlalchemy.String, default='no_image.jpg')
-    status = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    text = sqlalchemy.Column(sqlalchemy.Binary)
+    text_name = sqlalchemy.Column(sqlalchemy.String)
 
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
