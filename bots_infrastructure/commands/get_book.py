@@ -1,6 +1,6 @@
 from bots_infrastructure.command_engine import BotCommand, BotAnswer, WrongParams
 from data import db_session
-from data.db_functions import get_image_by_book
+from data.db_functions import get_image_by_book, get_text_by_book
 from data.db_session import Book, Author, Genre
 
 
@@ -17,13 +17,14 @@ def action(params):
     if book is None:
         return BotAnswer(f'''Книга с данным ID не найдена на сервере''')
     image = get_image_by_book(book)
+    text = get_text_by_book(book)
     description = book.description
     return BotAnswer(f'''Книга найдена!
 
 Название: {book.name}
 Автор: {book.author.name}
 Жанр: {book.genre.name}
-Описание: {description}''', {'photo': [image]})
+Описание: {description}''', {'photo': [image], 'text': [text]})
 
 
 command = BotCommand('get-book', action)
