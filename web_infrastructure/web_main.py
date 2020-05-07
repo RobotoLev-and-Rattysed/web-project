@@ -23,4 +23,4 @@ def main():
         'books_count': len(session.query(Book).filter(Book.status == 1).all()),
         'users_count': len(session.query(User).all())
     }
-    return render_template('greeting.html', title='Электронная библиотека')
+    return render_template(**template_params)
