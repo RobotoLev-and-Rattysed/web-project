@@ -23,7 +23,8 @@ class BookForm(FlaskForm):
     name = StringField('Название книги', validators=[DataRequired()])
     author = IntegerField('ID автора', validators=[DataRequired()])
     genre = IntegerField('ID жанра', validators=[DataRequired()])
-    description = TextAreaField('Описание книги')
+    description = TextAreaField('Описание книги (если оставить пустым, '
+                                'автоматически сформируется с использованием Википедии)')
     edit_image = BooleanField('Отметьте, если хотите изменить картинку книги')
     image = FileField('Изображение книги')
     submit = SubmitField('Сохранить')
