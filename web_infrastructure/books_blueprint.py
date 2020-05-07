@@ -71,9 +71,10 @@ def new_book():
 
         description = form.description.data
         if description == '':
+            author = session.query(Author.name).filter(Author.id == form.author.data).first()
             wikipedia.set_lang('ru')
             try:
-                description = wikipedia.summary(form.author.data +
+                description = wikipedia.summary(author +
                                                 ' ' +
                                                 form.name.data, sentences=3)
             except wikipedia.PageError:
