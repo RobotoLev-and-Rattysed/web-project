@@ -3,7 +3,7 @@ csrf_key = 'b0ecS4g2Kh0Wt4C2dhYLt7L38Z8EKl348yP2eDt05kzNP40PRHf86Q7Z36WClN5X6R6s
 
 # Настройки API ВКонтакте
 vk_group_key =\
-    '7826c95a31893273c01d1f66427239c828fd6099c5717149a38e063127e55f4d6205db40fd048b63ef42d'
+    '5996fb84f53d0f5a8c26ec95211f8828b4e8643f60f2793cbf2cc92a6fb94dfe203befd16ff799ec455e9'
 vk_confirmation_key = '6e666245'
 vk_secret_key = 'Vt248qN29CeIsIs4'
 

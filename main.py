@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_restful import Api
-# from flask_ngrok import run_with_ngrok
+from flask_ngrok import run_with_ngrok
 
 from bots_handlers import vk_handler
 from web_infrastructure import web_main, users_blueprint, books_blueprint, book_data_blueprint, \
@@ -40,7 +40,7 @@ app.register_blueprint(book_data_blueprint.blueprint)
 app.register_blueprint(requests_blueprint.blueprint)
 
 
-# run_with_ngrok(app)
+run_with_ngrok(app)
 
 
 @login_manager.user_loader
@@ -50,6 +50,6 @@ def load_user(user_id):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run('0.0.0.0', port=port)
-    # app.run()
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run('0.0.0.0', port=port)
+    app.run()

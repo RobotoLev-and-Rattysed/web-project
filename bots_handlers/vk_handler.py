@@ -78,8 +78,9 @@ def save_photo(peer_id, file_path) -> str:
 
 
 def save_document(peer_id, file_path) -> str:
-    upload_url = api.photos.getMessagesUploadServer(access_token=vk_group_key,
-                                                    peer_id=peer_id)['upload_url']
+    upload_url = api.docs.getMessagesUploadServer(type='doc',
+                                                  access_token=vk_group_key,
+                                                  peer_id=peer_id)['upload_url']
     vk_loader_response = requests.post(
         upload_url,
         files={'file': open(file_path, 'rb')}
@@ -89,7 +90,6 @@ def save_document(peer_id, file_path) -> str:
         file=vk_loader_response['file']
     )
 
-    attachment = f"doc{vk_saver_response[0]['owner_id']}_" \
-                 f"{vk_saver_response[0]['id']}_" \
-                 f"{vk_saver_response[0]['access_key']}"
+    attachment = f"doc{vk_saver_response['doc']['owner_id']}_" \
+                 f"{vk_saver_response['doc']['id']}"
     return attachment
