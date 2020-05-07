@@ -242,7 +242,7 @@ def handle_text(form, book, template_params):
         template_params['message'] = 'Принимаются только тексты с расширением .txt'
         return False
 
-    local_filename = f"ieb-book_{book.name}_{generate_random_filename(extension='.txt')}"
+    local_filename = f"IEL_book_{book.name}_{generate_random_filename(extension='.txt')}"
     abspath = os.path.abspath(
         os.path.join(__file__, f'../../static/txt/books/{local_filename}'))
     form.text.data.save(abspath)
