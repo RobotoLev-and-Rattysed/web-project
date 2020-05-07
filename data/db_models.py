@@ -2,8 +2,11 @@ import datetime
 import sqlalchemy
 import sqlalchemy.orm as orm
 from .db_session import SqlAlchemyBase
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+
+from sqlalchemy_serializer import SerializerMixin
 
 
 class User(SqlAlchemyBase, UserMixin):
@@ -34,7 +37,7 @@ class User(SqlAlchemyBase, UserMixin):
         return check_password_hash(self.hashed_password, password)
 
 
-class Book(SqlAlchemyBase):
+class Book(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'books'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)

@@ -13,4 +13,4 @@ discord_key = 'NzAxODc5ODU0NTIxNjQ3MTI0.Xp362w.ZUBqA0iw3GKsLSnKRe6KbdX_A_U'
 # Настройки БД на Heroku
 # database_url - только для локального тестирования (осторожно: может устареть)
 # Осторожно: ведет на боевую базу!
-database_url = 'postgres://glijadksxtgkfi:780c22f30a434c33f40645a140e1df43ec549371baf8aa426ef672c4b7f3f659@ec2-54-228-251-117.eu-west-1.compute.amazonaws.com:5432/dcsrq1ikbg262m'
+database_url = 'postgres://juazdphckpebny:0dc967600e80ec75ecc54b48a343c32b07858d65342157fe3eae125a042390c8@ec2-54-228-251-117.eu-west-1.compute.amazonaws.com:5432/dcsrq1ikbg262m'
