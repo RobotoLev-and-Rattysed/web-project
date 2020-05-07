@@ -69,16 +69,8 @@ def new_book():
             return render_template(**template_params,
                                    message="Некорректный ID жанра")
 
-        description = form.description.data
-        if description == '':
-            author = session.query(Author).filter(Author.id == form.author.data).first()
-            wikipedia.set_lang('ru')
-            try:
-                description = wikipedia.summary('книга ' + author.name +
-                                                ' ' +
-                                                form.name.data, sentences=3)
-            except wikipedia.PageError:
-                description = 'Описание отсутствует'
+        description = wiki_description(form.description.data, form.name.data, form.author.data)
+
         book = Book(
             user_id=current_user.id,
             name=form.name.data,
@@ -130,16 +122,8 @@ def edit_book(book_id):
             if not session.query(Genre).get(form.genre.data):
                 return render_template(**template_params,
                                        message="Такого жанра нет в базе")
-            description = form.description.data
-            if description == '':
-                author = session.query(Author).filter(Author.id == form.author.data).first()
-                wikipedia.set_lang('ru')
-                try:
-                    description = wikipedia.summary('книга ' + author.name +
-                                                    ' ' +
-                                                    form.name.data, sentences=3)
-                except wikipedia.PageError:
-                    description = 'Описание отсутствует'
+
+            description = wiki_description(form.description.data, form.name.data, form.author.data)
 
             book.name = form.name.data
             book.author_id = form.author.data
@@ -196,3 +180,14 @@ def delete_book(book_id):
         session.delete(book)
         session.commit()
     return redirect(request.args.get('from', default='/my', type=str))
+
+
+def wiki_description(description, book_name, author_name):
+    if description == '':
+        wikipedia.set_lang('ru')
+        try:
+            description = wikipedia.summary(f'книга {author_name} {book_name}', sentences=3)
+        except wikipedia.PageError:
+            description = 'Описание отсутствует'
+
+    return description
