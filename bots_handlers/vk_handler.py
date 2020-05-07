@@ -46,11 +46,15 @@ def processing():
 
 
 def save_attachments(peer_id, file_type, file_paths) -> str:
-    if file_type != 'photo':
+    if file_type == 'photo':
+        return ','.join([save_photo(peer_id, path.abspath(path.join(__file__, '../..' + file_path))
+                                    ) for file_path in file_paths])
+    elif file_type == 'text':
+        return ','.join(
+            [save_document(peer_id, path.abspath(path.join(__file__, '../..' + file_path)))
+             for file_path in file_paths])
+    else:
         return ''
-
-    return ','.join([save_photo(peer_id, path.abspath(path.join(__file__, '../..' + file_path))
-                                ) for file_path in file_paths])
 
 
 def save_photo(peer_id, file_path) -> str:
@@ -68,6 +72,24 @@ def save_photo(peer_id, file_path) -> str:
     )
 
     attachment = f"photo{vk_saver_response[0]['owner_id']}_" \
+                 f"{vk_saver_response[0]['id']}_" \
+                 f"{vk_saver_response[0]['access_key']}"
+    return attachment
+
+
+def save_document(peer_id, file_path) -> str:
+    upload_url = api.photos.getMessagesUploadServer(access_token=vk_group_key,
+                                                    peer_id=peer_id)['upload_url']
+    vk_loader_response = requests.post(
+        upload_url,
+        files={'file': open(file_path, 'rb')}
+    ).json()
+    vk_saver_response = api.docs.save(
+        access_token=vk_group_key,
+        file=vk_loader_response['file']
+    )
+
+    attachment = f"doc{vk_saver_response[0]['owner_id']}_" \
                  f"{vk_saver_response[0]['id']}_" \
                  f"{vk_saver_response[0]['access_key']}"
     return attachment
