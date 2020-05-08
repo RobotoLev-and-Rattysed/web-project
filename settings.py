@@ -8,7 +8,7 @@ vk_confirmation_key = '6e666245'
 vk_secret_key = 'Vt248qN29CeIsIs4'
 
 # Настройки API Дискорда
-discord_key = 'NzAxODc5ODU0NTIxNjQ3MTI0.XrXIng.EM5X_VGpLFNcIe11IDvH4O5mTaw'
+discord_key = 'NzA4NDM1NTk0NzI4MTc3Nzgz.XrXUog.5FDeTEt2KYsx17y8q4Sn4T1GCLQ'
 
 # Настройки БД на Heroku
 # database_url - только для локального тестирования (осторожно: может устареть)
