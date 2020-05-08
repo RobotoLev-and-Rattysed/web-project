@@ -10,4 +10,4 @@ def action(params):
 command = BotCommand('find-book', action)
 command.platforms = {'vk', 'discord'}
 command.description = '''Поиск книги по названию.
-Использование: -find-book [НАЗВАНИЕ_КНИГИ]'''
+Использование: -find-book [НАЗВАНИЕ КНИГИ]'''
