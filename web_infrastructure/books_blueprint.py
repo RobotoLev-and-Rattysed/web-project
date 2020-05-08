@@ -49,7 +49,18 @@ def one_book(book_id):
 @blueprint.route('/new_book', methods=['GET', 'POST'])
 @login_required
 def new_book():
+    session = db_session.create_session()
     form = BookForm()
+
+    form.author.choices = [(author.id, author.name)
+                           for author in session.query(Author).filter(Author.status == 1).all()
+                           ]
+    form.genre.choices = [(genre.id, genre.name)
+                          for genre in session.query(Genre).filter(Genre.status == 1).all()
+                          ]
+
+    print(form.author.choices)
+    print(form.genre.choices)
 
     template_params = {
         'template_name_or_list': 'new_book.html',
@@ -59,8 +70,7 @@ def new_book():
     }
 
     if form.validate_on_submit():
-        session = db_session.create_session()
-
+        # print(form.author.data)
         author = session.query(Author).get(form.author.data)
         genre = session.query(Genre).get(form.genre.data)
         if not author or author.status != 1:
@@ -100,6 +110,13 @@ def new_book():
 def edit_book(book_id):
     session = db_session.create_session()
     form = BookForm()
+
+    form.author.choices = [(author.id, author.name)
+                           for author in session.query(Author).filter(Author.status == 1).all()
+                           ]
+    form.genre.choices = [(genre.id, genre.name)
+                          for genre in session.query(Genre).filter(Genre.status == 1).all()
+                          ]
 
     book = session.query(Book).get(book_id)
     if not book:
@@ -198,7 +215,7 @@ def wiki_description(description, book_name, author_name, genre_name):
             description = "Описание отсутствует"
         else:
             page = wikipedia.page(results[0])
-            description = page.content[:500] + "..."
+            description = f'{page.url}\n{page.content[:500] + "..."}'
 
     return description
 

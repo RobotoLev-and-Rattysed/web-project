@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, TextAreaField, IntegerField, FileField, SubmitField
-from wtforms import BooleanField
+from wtforms import BooleanField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
@@ -21,8 +21,8 @@ class LoginForm(FlaskForm):
 
 class BookForm(FlaskForm):
     name = StringField('Название книги', validators=[DataRequired()])
-    author = IntegerField('ID автора', validators=[DataRequired()])
-    genre = IntegerField('ID жанра', validators=[DataRequired()])
+    author = SelectField('Автор', validators=[DataRequired()])
+    genre = SelectField('Жанр', validators=[DataRequired()])
     description = TextAreaField('Описание книги (если оставить пустым, '
                                 'автоматически сформируется с использованием Википедии)')
 

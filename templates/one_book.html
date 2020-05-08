@@ -13,9 +13,14 @@
         <div class="media-body">
             <h5 class="mt-0">{{ book.name }} ({{ book.author.name }}, {{ book.genre.name }}) [by {{ book.user.nickname }}]</h5>
 
-            <a class="btn btn-primary" href="/download/{{ book.id }}">Скачать</a>
-            <br />
-            {% for line in book.description.split('\n') %}
+            {% set description = book.description.split('\n') %}
+
+            <a class="btn btn-primary" href="/download/{{ book.id }}">Скачать</a><br /><br />
+            {% if description[0].startswith('https://ru.wikipedia.org/') %}
+                <a href="{{ description[0] }}" target="_blank">Подробнее на Википедии</a><br />
+                {% set description = description[1:] %}
+            {% endif %}
+            {% for line in description %}
                 {{ line }}<br />
             {% endfor %}
         </div>
