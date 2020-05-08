@@ -21,8 +21,8 @@ class LoginForm(FlaskForm):
 
 class BookForm(FlaskForm):
     name = StringField('Название книги', validators=[DataRequired()])
-    author = SelectField('Автор', validators=[DataRequired()])
-    genre = SelectField('Жанр', validators=[DataRequired()])
+    author = SelectField('Автор', coerce=int, validate_choice=False)
+    genre = SelectField('Жанр', coerce=int, validate_choice=False)
     description = TextAreaField('Описание книги (если оставить пустым, '
                                 'автоматически сформируется с использованием Википедии)')
 
